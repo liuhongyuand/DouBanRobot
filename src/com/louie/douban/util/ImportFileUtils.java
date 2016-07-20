@@ -45,9 +45,15 @@ public class ImportFileUtils {
 
     public static void initHEAD(){
         Properties properties = new Properties();
+        Properties propertiesComment = new Properties();
+        Properties propertiesCommentFORM = new Properties();
         try {
             properties.load(new FileReader(new File(Parameters.PATH + "/conf/HEAD.properties")));
+            propertiesComment.load(new FileReader(new File(Parameters.PATH + "/conf/COMMENT.properties")));
+            propertiesCommentFORM.load(new FileReader(new File(Parameters.PATH + "/conf/COMMENT_FORM.properties")));
             properties.entrySet().forEach((k) -> GlobalCollections.HEAD.put(k.getKey().toString(), k.getValue().toString()));
+            propertiesComment.entrySet().forEach((k) -> GlobalCollections.COMMENT_HEAD.put(k.getKey().toString(), k.getValue().toString()));
+            propertiesCommentFORM.entrySet().forEach((k) -> GlobalCollections.COMMENT_FORM.put(k.getKey().toString(), k.getValue().toString()));
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }

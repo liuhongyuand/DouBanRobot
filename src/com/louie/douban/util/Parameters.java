@@ -7,6 +7,6 @@ package com.louie.douban.util;
 public class Parameters {
 
     public static final String PATH = System.getProperties().getProperty("user.dir");
-    public static final String HOSTPAGE = "www.douban.com";
+    public static final String HOSTPAGE = "https://www.douban.com/group";
 
 }
