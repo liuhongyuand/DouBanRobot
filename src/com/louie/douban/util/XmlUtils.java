@@ -5,12 +5,12 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Utils for XML files
@@ -21,7 +21,7 @@ public class XmlUtils {
     private static final Logger LOG = LoggerFactory.getLogger(XmlUtils.class);
 
     public static void initUsers(){
-        File myXML = new File(System.getProperties().getProperty("usr.dir") + "/conf/Users.xml");
+        File myXML = new File(System.getProperties().getProperty("user.dir") + "/conf/Users.xml");
         SAXReader saxReader = new SAXReader();
         try {
             Document document = saxReader.read(myXML);
@@ -38,6 +38,12 @@ public class XmlUtils {
         } catch (DocumentException e) {
             LOG.error(e.getMessage(), e);
         }
+    }
+
+    @Test
+    public void TestInit(){
+        initUsers();
+        GlobalCollections.USERS.forEach((k, v) -> System.out.println(k + " " + v.getPassword() + " " + v.getRemember()));
     }
 
 }

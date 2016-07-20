@@ -1,5 +1,7 @@
 package com.louie.douban.model;
 
+import com.louie.douban.util.GlobalCollections;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,8 +10,6 @@ import java.util.Map;
  * Created by liuhongyu.louie on 2016/7/19.
  */
 public class RequestObject {
-
-    public static Map<String, String> HEAD = new HashMap<>();
 
     class Head {
         private String HOST;
@@ -29,7 +29,7 @@ public class RequestObject {
 
         public void setHOST(String HOST) {
             this.HOST = HOST;
-            HEAD.put("HOST", HOST);
+            GlobalCollections.HEAD.put("HOST", HOST);
         }
 
         public String getConnection() {
