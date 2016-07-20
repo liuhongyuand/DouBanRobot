@@ -13,6 +13,6 @@ public class GlobalCollections {
 
     public static final Map<String, User> USERS = new HashMap<>();
 
-    public static Map<String, String> HEAD = new HashMap<>();
+    public static final Map<String, String> HEAD = new HashMap<>();
 
 }

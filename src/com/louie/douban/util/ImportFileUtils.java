@@ -10,18 +10,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * Utils for XML files
  * Created by liuhongyu.louie on 2016/7/19.
  */
-public class XmlUtils {
+public class ImportFileUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(XmlUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ImportFileUtils.class);
 
     public static void initUsers(){
-        File myXML = new File(System.getProperties().getProperty("user.dir") + "/conf/Users.xml");
+        File myXML = new File(Parameters.PATH + "/conf/Users.xml");
         SAXReader saxReader = new SAXReader();
         try {
             Document document = saxReader.read(myXML);
@@ -40,10 +43,21 @@ public class XmlUtils {
         }
     }
 
+    public static void initHEAD(){
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileReader(new File(Parameters.PATH + "/conf/HEAD.properties")));
+            properties.entrySet().forEach((k) -> GlobalCollections.HEAD.put(k.getKey().toString(), k.getValue().toString()));
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
+    }
+
     @Test
     public void TestInit(){
         initUsers();
         GlobalCollections.USERS.forEach((k, v) -> System.out.println(k + " " + v.getPassword() + " " + v.getRemember()));
+        initHEAD();
     }
 
 }

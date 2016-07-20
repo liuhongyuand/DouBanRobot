@@ -1,6 +1,6 @@
 package com.louie.douban;
 
-import com.louie.douban.util.XmlUtils;
+import com.louie.douban.util.ImportFileUtils;
 
 /**
  * The Main
@@ -9,7 +9,8 @@ import com.louie.douban.util.XmlUtils;
 public class Startup {
 
     static {
-        XmlUtils.initUsers();
+        ImportFileUtils.initUsers();
+        ImportFileUtils.initHEAD();
     }
 
     public static void main(String[] args){
