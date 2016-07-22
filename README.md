@@ -5,4 +5,4 @@
 
 ##### Comment any new article immediately and automatic.
 
-##### Send persnal message to other users automatic.
+##### Send personal message to other users automatic.
