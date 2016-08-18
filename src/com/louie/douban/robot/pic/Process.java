@@ -1,5 +1,6 @@
 package com.louie.douban.robot.pic;
 
+import com.louie.douban.model.Letter;
 import com.louie.douban.util.Parameters;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -13,9 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Process the pic
@@ -26,6 +25,9 @@ public class Process {
     private static final int target = 16711423;  //黑色
     private static final int difRate = 8000000/4;  //色值偏移
     private static final int nearby = 1;  //像素位
+    private static final int PIC_NUM = 220; //分割图片数量
+    private static final int LETTER_WIDTH = 20; //字母宽度
+    private static final Set<Letter> LETTERS = new HashSet<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(Process.class);
 
     public static void processPic(String img) {
@@ -39,7 +41,7 @@ public class Process {
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             int width = image.getWidth();
             int height = image.getHeight();
-            int[][] newRGB = new int[width][height];
+            int[][] newRGB;
             newRGB = removeColor(image, width, height);
             newRGB = doDenoising(image, newRGB, width, height);
             for (int i = 0; i < width; i++) {
@@ -47,6 +49,7 @@ public class Process {
                     image.setRGB(i, j, newRGB[i][j]);
                 }
             }
+            divideToLetter(newRGB, image.getHeight(), image.getWidth());
             JLabel label = new JLabel("");
             label.setIcon(new ImageIcon(image));
             frame.add(label, BorderLayout.CENTER);
@@ -130,13 +133,30 @@ public class Process {
         return isDiff[0] >= RGBCircle.get(StartPointRGB).size()/4 * 3;
     }
 
-//    @Test
-//    public void testPic() {
-//        processPic();
-//    }
+    private static void divideToLetter(int[][] picRGB, int height, int width){
+        for (int num = 0; num < width; num = num + LETTER_WIDTH) {
+            final int[][] LETTER = new int[LETTER_WIDTH][height];
+            for (int WIDTH = 0; WIDTH < LETTER_WIDTH; WIDTH++) {
+                if (WIDTH > width){
+                    break;
+                }
+                for (int HEIGHT = 0; HEIGHT < height; HEIGHT++){
+                    LETTER[WIDTH][HEIGHT] = picRGB[WIDTH][HEIGHT];
+                }
+            }
+            Letter letter = boundaryIdentification(new Letter(picRGB, LETTER));
+            LETTERS.add(letter);
+        }
+
+    }
+
+    private static Letter boundaryIdentification(Letter letter){
+
+        return letter;
+    }
 
     public static void main(String[] args) {
-        processPic(Parameters.PATH + "/resources/captcha5.jpg");
+        processPic(Parameters.PATH + "/resources/captcha4.jpg");
     }
 
 }
