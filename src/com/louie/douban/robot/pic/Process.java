@@ -2,6 +2,7 @@ package com.louie.douban.robot.pic;
 
 import com.louie.douban.model.Letter;
 import com.louie.douban.util.Parameters;
+import com.louie.douban.util.Type;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -22,12 +24,15 @@ import java.util.*;
  */
 public class Process {
 
+    private static final double eliminateValue = 0.92;
     private static final int target = 16711423;  //黑色
     private static final int difRate = 8000000/4;  //色值偏移
     private static final int nearby = 1;  //像素位
-    private static final int PIC_NUM = 220; //分割图片数量
-    private static final int LETTER_WIDTH = 20; //字母宽度
-    private static final Set<Letter> LETTERS = new HashSet<>();
+    public static final int LETTER_WIDTH = 20; //字母宽度
+    public static final int LETTER_GAP = 1; //字母间隔
+    private static final String FILE = Parameters.PATH + "/resources/captcha.jpg";
+    private static final Set<Letter> LETTERS = new LinkedHashSet<>();
+    private static final Set<BufferedImage> buffers = new LinkedHashSet<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(Process.class);
 
     public static void processPic(String img) {
@@ -35,7 +40,7 @@ public class Process {
         try {
             BufferedImage image = ImageIO.read(pic);
             JFrame frame = new JFrame();
-            frame.setLayout(new BorderLayout());
+            frame.setLayout(null);
             frame.setSize(image.getWidth() + 10, image.getHeight() * 2 + 10);
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -43,20 +48,54 @@ public class Process {
             int height = image.getHeight();
             int[][] newRGB;
             newRGB = removeColor(image, width, height);
-            newRGB = doDenoising(image, newRGB, width, height);
-            for (int i = 0; i < width; i++) {
-                for (int j = 0; j < height; j++) {
-                    image.setRGB(i, j, newRGB[i][j]);
-                }
+            for (int i = 0; i < 3; i++) {
+                denoising(image, newRGB, width, height);
             }
             divideToLetter(newRGB, image.getHeight(), image.getWidth());
-            JLabel label = new JLabel("");
-            label.setIcon(new ImageIcon(image));
-            frame.add(label, BorderLayout.CENTER);
+            LETTERS.forEach((letter -> {
+                BufferedImage bufferImg = new BufferedImage(letter.getEndX() - letter.getStartX(), letter.getLetterRGB()[0].length, BufferedImage.TYPE_INT_BGR);
+                denoising(bufferImg, letter.getLetterRGB(), letter.getEndX() - letter.getStartX(), letter.getLetterRGB()[0].length);
+                int plus = 0;
+                double multi = 1;
+                for (int i = 0 ; i < letter.getEndX() - letter.getStartX(); i++){
+                    for(int j = 0; j < letter.getOriginalPicRBG()[0].length; j++){
+                        plus += letter.getLetterRGB()[i][j];
+                    }
+                }
+                System.out.println(plus + " " + multi);
+                buffers.add(setBufferedImage(bufferImg, letter.getLetterRGB()));
+            }));
+            int temp = 10;
+            for (BufferedImage buffer : buffers) {
+                JLabel label = new JLabel("");
+                label.setIcon(new ImageIcon(buffer));
+                label.setBounds(temp, 0, buffer.getWidth(), buffer.getHeight());
+                frame.add(label);
+                temp = temp + buffer.getWidth() + 20;
+            }
             frame.setVisible(true);
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
         }
+    }
+
+    private static double getDouble(double num, int pos){
+        BigDecimal bd = new BigDecimal(num);
+        return bd.setScale(pos ,BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    private static void denoising(BufferedImage image, int[][] newRGB, int width, int height){
+        newRGB = doDenoising(image, newRGB, width, height);
+        setBufferedImage(image, newRGB);
+    }
+
+    private static BufferedImage setBufferedImage(BufferedImage img, int[][] RGB){
+        for (int i = 0; i < RGB.length; i++) {
+            for (int j = 0; j < RGB[0].length; j++) {
+                img.setRGB(i, j, RGB[i][j]);
+            }
+        }
+        return img;
     }
 
     private static int[][] removeColor(BufferedImage image, int width, int height){
@@ -134,29 +173,93 @@ public class Process {
     }
 
     private static void divideToLetter(int[][] picRGB, int height, int width){
-        for (int num = 0; num < width; num = num + LETTER_WIDTH) {
+        for (int num = 0; num < width; num = num + LETTER_WIDTH + LETTER_GAP) {
             final int[][] LETTER = new int[LETTER_WIDTH][height];
-            for (int WIDTH = 0; WIDTH < LETTER_WIDTH; WIDTH++) {
-                if (WIDTH > width){
+            for (int WIDTH = num; WIDTH < num + LETTER_WIDTH; WIDTH++) {
+                if (WIDTH >= width){
                     break;
                 }
-                for (int HEIGHT = 0; HEIGHT < height; HEIGHT++){
-                    LETTER[WIDTH][HEIGHT] = picRGB[WIDTH][HEIGHT];
+                for(int HEIGHT = 0; HEIGHT < height; HEIGHT++){
+                    LETTER[WIDTH - num][HEIGHT] = picRGB[WIDTH][HEIGHT];
                 }
             }
-            Letter letter = boundaryIdentification(new Letter(picRGB, LETTER));
-            LETTERS.add(letter);
+            Letter letter = boundaryIdentification(new Letter(picRGB, LETTER, num, num + LETTER_WIDTH));
+            if (letter.isUseful()) {
+                LETTERS.add(letter);
+            }
         }
 
     }
 
     private static Letter boundaryIdentification(Letter letter){
-
+        if (usefulCheck(letter)){
+            return boundaryLocate(boundaryLocate(letter, Type.BoundaryDirection.LEFT), Type.BoundaryDirection.RIGHT);
+        }
+        letter.setUseful(false);
         return letter;
     }
 
+    private static Letter boundaryLocate(Letter letter, Type.BoundaryDirection type){
+        double whiteLineLeft;
+        double whiteLineMid;
+        double whiteLineRight;
+        int width = letter.getOriginalPicRBG().length;
+        int height = letter.getOriginalPicRBG()[0].length;
+        int midLine = type == Type.BoundaryDirection.LEFT ? letter.getStartX() : letter.getEndX();
+        if (type == Type.BoundaryDirection.LEFT ? midLine > 0 : midLine < width) {
+            whiteLineLeft = getWhiteLine(letter.getOriginalPicRBG(), midLine - 1, height);
+            whiteLineMid = getWhiteLine(letter.getOriginalPicRBG(), midLine, height);
+            whiteLineRight = getWhiteLine(letter.getOriginalPicRBG(), midLine + 1, height);
+            if (whiteLineLeft < whiteLineRight && whiteLineMid < whiteLineRight){
+                if (type == Type.BoundaryDirection.LEFT){
+                    letter.setStartX(midLine + 1);
+                } else {
+                    letter.setEndX(midLine + 1);
+                }
+                letter = boundaryLocate(letter, type);
+            } else if (whiteLineRight < whiteLineLeft && whiteLineMid < whiteLineLeft){
+                if (type == Type.BoundaryDirection.LEFT){
+                    letter.setStartX(midLine - 1);
+                } else {
+                    letter.setEndX(midLine - 1);
+                }
+                letter = boundaryLocate(letter, type);
+            } else {
+
+            }
+        }
+        letter.updateLetterRGB();
+        letter.setUseful(true);
+        return letter;
+    }
+
+    private static int getWhiteLine(int[][] RGB, int x, int height){
+        int whiteLine = 0;
+        for (int i = 0; i < height; i++) {
+            if (RGB[x][i] == -1){
+                whiteLine++;
+            }
+        }
+        return whiteLine;
+    }
+
+    private static boolean usefulCheck(Letter letter){
+        int[][] RGB = letter.getLetterRGB();
+        double useless = 0;
+        double width = RGB.length;
+        double height = RGB[0].length;
+        for (int[] aRGB : RGB) {
+            for (int j = 0; j < height; j++) {
+                if (aRGB[j] == -1 || aRGB[j] == 0) {
+                    useless++;
+                }
+            }
+        }
+        return useless/(width * height) < eliminateValue; //when useless/(width * height) < eliminateValue, the data is useful;
+    }
+
     public static void main(String[] args) {
-        processPic(Parameters.PATH + "/resources/captcha4.jpg");
+        processPic(FILE);
     }
 
 }
