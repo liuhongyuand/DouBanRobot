@@ -11,8 +11,8 @@ public class Letter {
     private boolean isUseful;
     private int StartX;
     private int EndX;
-    private int width;
-    private int height;
+    private int StartY;
+    private int EndY;
     private int[][] letterRGB;
     private int[][] originalPicRBG;
     private BoundaryLine<Integer, Integer> boundaryLine;
@@ -22,6 +22,8 @@ public class Letter {
         this.letterRGB = letterRGB;
         this.StartX = StartX;
         this.EndX = EndX;
+        this.StartY = 0;
+        this.EndY = originalPicRBG[0].length;
         setBoundaryLine(new BoundaryLine<>(StartX, StartX + Process.LETTER_WIDTH));
     }
 
@@ -75,28 +77,26 @@ public class Letter {
         getBoundaryLine().setY(startX + Process.LETTER_WIDTH);
     }
 
-    public int getWidth() {
-        return width;
+    public int getStartY() {
+        return StartY;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
+    public void setStartY(int startY) {
+        StartY = startY;
     }
 
-    public int getHeight() {
-        return height;
+    public int getEndY() {
+        return EndY;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
+    public void setEndY(int endY) {
+        EndY = endY;
     }
 
     public void updateLetterRGB(){
         int[][] newRGB = new int[getEndX() - getStartX()][getOriginalPicRBG()[0].length];
         for (int width = getStartX(); width < getEndX(); width++){
-            for (int height = 0; height < getOriginalPicRBG()[0].length; height++){
-                newRGB[width - getStartX()][height] = getOriginalPicRBG()[width][height];
-            }
+            System.arraycopy(getOriginalPicRBG()[width], getStartY(), newRGB[width - getStartX()], getStartY(), getEndY() - getStartY());
         }
         setLetterRGB(newRGB);
     }

@@ -224,8 +224,6 @@ public class Process {
                     letter.setEndX(midLine - 1);
                 }
                 letter = boundaryLocate(letter, type);
-            } else {
-
             }
         }
         letter.updateLetterRGB();
