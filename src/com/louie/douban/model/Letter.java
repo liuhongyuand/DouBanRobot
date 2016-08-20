@@ -94,9 +94,11 @@ public class Letter {
     }
 
     public void updateLetterRGB(){
-        int[][] newRGB = new int[getEndX() - getStartX()][getOriginalPicRBG()[0].length];
+        int[][] newRGB = new int[getEndX() - getStartX()][getEndY() - getStartY()];
         for (int width = getStartX(); width < getEndX(); width++){
-            System.arraycopy(getOriginalPicRBG()[width], getStartY(), newRGB[width - getStartX()], getStartY(), getEndY() - getStartY());
+            for (int height = getStartY(); height < getEndY(); height++){
+                newRGB[width - getStartX()][height - getStartY()] = getOriginalPicRBG()[width][height];
+            }
         }
         setLetterRGB(newRGB);
     }

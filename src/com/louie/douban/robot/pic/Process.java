@@ -24,13 +24,14 @@ import java.util.*;
  */
 public class Process {
 
-    private static final double eliminateValue = 0.92;
-    private static final int target = 16711423;  //黑色
-    private static final int difRate = 8000000/4;  //色值偏移
-    private static final int nearby = 1;  //像素位
-    public static final int LETTER_WIDTH = 20; //字母宽度
-    public static final int LETTER_GAP = 1; //字母间隔
-    private static final String FILE = Parameters.PATH + "/resources/captcha.jpg";
+    private static final double eliminateValue = 0.92;     //过滤没有验证码的模块
+    private static final int target = 16711423;             //黑色
+    private static final int difRate = 8000000/4;           //色值偏移
+    private static final int nearby = 1;                    //像素位
+    public static final int LETTER_WIDTH = 20;             //字母宽度
+    private static final int LETTER_GAP = 1;               //字母间隔
+    private static final double pixelFilter = 3.5;         //像素过滤
+    private static final String FILE = Parameters.PATH + "/resources/captcha5.jpg";
     private static final Set<Letter> LETTERS = new LinkedHashSet<>();
     private static final Set<BufferedImage> buffers = new LinkedHashSet<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(Process.class);
@@ -53,12 +54,12 @@ public class Process {
             }
             divideToLetter(newRGB, image.getHeight(), image.getWidth());
             LETTERS.forEach((letter -> {
-                BufferedImage bufferImg = new BufferedImage(letter.getEndX() - letter.getStartX(), letter.getLetterRGB()[0].length, BufferedImage.TYPE_INT_BGR);
-                denoising(bufferImg, letter.getLetterRGB(), letter.getEndX() - letter.getStartX(), letter.getLetterRGB()[0].length);
+                BufferedImage bufferImg = new BufferedImage(letter.getEndX() - letter.getStartX(), letter.getEndY() - letter.getStartY(), BufferedImage.TYPE_INT_BGR);
+                denoising(bufferImg, letter.getLetterRGB(), letter.getEndX() - letter.getStartX(), letter.getEndY() - letter.getStartY());
                 int plus = 0;
                 double multi = 1;
                 for (int i = 0 ; i < letter.getEndX() - letter.getStartX(); i++){
-                    for(int j = 0; j < letter.getOriginalPicRBG()[0].length; j++){
+                    for(int j = 0; j < letter.getEndY() - letter.getStartY(); j++){
                         plus += letter.getLetterRGB()[i][j];
                     }
                 }
@@ -193,13 +194,14 @@ public class Process {
 
     private static Letter boundaryIdentification(Letter letter){
         if (usefulCheck(letter)){
-            return boundaryLocate(boundaryLocate(letter, Type.BoundaryDirection.LEFT), Type.BoundaryDirection.RIGHT);
+            letter = boundaryLocateHorizontal(boundaryLocateHorizontal(letter, Type.BoundaryDirection.LEFT), Type.BoundaryDirection.RIGHT);
+            return boundaryLocateVertical(boundaryLocateVertical(letter, Type.BoundaryDirection.UP), Type.BoundaryDirection.DOWN);
         }
         letter.setUseful(false);
         return letter;
     }
 
-    private static Letter boundaryLocate(Letter letter, Type.BoundaryDirection type){
+    private static Letter boundaryLocateHorizontal(Letter letter, Type.BoundaryDirection type){
         double whiteLineLeft;
         double whiteLineMid;
         double whiteLineRight;
@@ -207,23 +209,23 @@ public class Process {
         int height = letter.getOriginalPicRBG()[0].length;
         int midLine = type == Type.BoundaryDirection.LEFT ? letter.getStartX() : letter.getEndX();
         if (type == Type.BoundaryDirection.LEFT ? midLine > 0 : midLine < width) {
-            whiteLineLeft = getWhiteLine(letter.getOriginalPicRBG(), midLine - 1, height);
-            whiteLineMid = getWhiteLine(letter.getOriginalPicRBG(), midLine, height);
-            whiteLineRight = getWhiteLine(letter.getOriginalPicRBG(), midLine + 1, height);
+            whiteLineLeft = getWhiteCount(letter.getOriginalPicRBG(), midLine - 1, height, false);
+            whiteLineMid = getWhiteCount(letter.getOriginalPicRBG(), midLine, height, false);
+            whiteLineRight = getWhiteCount(letter.getOriginalPicRBG(), midLine + 1, height, false);
             if (whiteLineLeft < whiteLineRight && whiteLineMid < whiteLineRight){
                 if (type == Type.BoundaryDirection.LEFT){
                     letter.setStartX(midLine + 1);
                 } else {
                     letter.setEndX(midLine + 1);
                 }
-                letter = boundaryLocate(letter, type);
+                letter = boundaryLocateHorizontal(letter, type);
             } else if (whiteLineRight < whiteLineLeft && whiteLineMid < whiteLineLeft){
                 if (type == Type.BoundaryDirection.LEFT){
                     letter.setStartX(midLine - 1);
                 } else {
                     letter.setEndX(midLine - 1);
                 }
-                letter = boundaryLocate(letter, type);
+                letter = boundaryLocateHorizontal(letter, type);
             }
         }
         letter.updateLetterRGB();
@@ -231,14 +233,54 @@ public class Process {
         return letter;
     }
 
-    private static int getWhiteLine(int[][] RGB, int x, int height){
-        int whiteLine = 0;
-        for (int i = 0; i < height; i++) {
-            if (RGB[x][i] == -1){
-                whiteLine++;
+    private static Letter boundaryLocateVertical(Letter letter, Type.BoundaryDirection type){
+        double whiteLineUp = 0;
+        double whiteLineMid = 0;
+        double whiteLineDown = 0;
+        int width = letter.getLetterRGB().length;
+        int height = letter.getLetterRGB()[0].length;
+        int midLine = type == Type.BoundaryDirection.UP ? letter.getStartY() : letter.getEndY() - letter.getStartY() - 1;
+        if (midLine < height && midLine >= 0 && letter.getEndY() - letter.getStartY() > 20) {
+            if (type == Type.BoundaryDirection.UP) {
+                whiteLineMid = getWhiteCount(letter.getLetterRGB(), midLine, width, true);
+                whiteLineUp = getWhiteCount(letter.getLetterRGB(), midLine + 1, width, true);
+            } else if (type == Type.BoundaryDirection.DOWN) {
+                whiteLineMid = getWhiteCount(letter.getLetterRGB(), midLine, width, true);
+                whiteLineDown = getWhiteCount(letter.getLetterRGB(), midLine - 1, width, true);
+            }
+            if (whiteLineMid <= whiteLineDown){
+                letter.setEndY(letter.getEndY() - 1);
+                letter = boundaryLocateVertical(letter, type);
+            } else if (whiteLineMid <= whiteLineUp){
+                letter.setStartY(midLine + 1);
+                letter = boundaryLocateVertical(letter, type);
+            } else if (whiteLineMid > whiteLineDown && width - whiteLineDown < pixelFilter){
+                letter.setEndY(letter.getEndY() - 1);
+                letter = boundaryLocateVertical(letter, type);
+            } else if (whiteLineMid > whiteLineUp && width - whiteLineUp < pixelFilter){
+                letter.setStartY(midLine + 1);
+                letter = boundaryLocateVertical(letter, type);
             }
         }
-        return whiteLine;
+        letter.updateLetterRGB();
+        letter.setUseful(true);
+        return letter;
+    }
+
+    private static int getWhiteCount(int[][] RGB, int x, int length, boolean isVertical){
+        int whiteCount = 0;
+        for (int i = 0; i < length; i++) {
+            if (isVertical){
+                if (RGB[i][x] == -1) {
+                    whiteCount++;
+                }
+            }else {
+                if (RGB[x][i] == -1) {
+                    whiteCount++;
+                }
+            }
+        }
+        return whiteCount;
     }
 
     private static boolean usefulCheck(Letter letter){
