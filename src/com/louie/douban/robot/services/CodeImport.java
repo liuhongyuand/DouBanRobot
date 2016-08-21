@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by liuhongyu.louie on 2016/8/21.
@@ -18,7 +19,7 @@ public class CodeImport extends AbstractPicProcess {
 
     @Override
     public Object[] process(String img) {
-        final java.util.List<java.util.List<Point>> letters = new LinkedList<>();
+        final List<List<Point>> letters = new LinkedList<>();
         File pic = new File(img);
         try {
             BufferedImage image = ImageIO.read(pic);
@@ -33,7 +34,7 @@ public class CodeImport extends AbstractPicProcess {
             LETTERS.forEach((letter -> {
                 BufferedImage bufferImg = new BufferedImage(letter.getWidth(), letter.getHeight(), BufferedImage.TYPE_INT_BGR);
                 denoising(bufferImg, letter.getLetterRGB(), letter.getWidth(), letter.getHeight());
-                java.util.List<Point> points = new LinkedList<>();
+                List<Point> points = new LinkedList<>();
                 for (int i = 0 ; i < letter.getWidth(); i++){
                     for(int j = 0; j < letter.getHeight(); j++){
                         if (letter.getLetterRGB()[i][j] != -1 && letter.getLetterRGB()[i][j] != 0){

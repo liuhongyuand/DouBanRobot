@@ -139,7 +139,7 @@ public abstract class AbstractPicProcess {
         int width = letter.getOriginalPicRBG().length;
         int height = letter.getOriginalPicRBG()[0].length;
         int midLine = type == Type.BoundaryDirection.LEFT ? letter.getStartX() : letter.getEndX();
-        if (type == Type.BoundaryDirection.LEFT ? midLine > 0 : midLine < width) {
+        if (type == Type.BoundaryDirection.LEFT ? midLine > 1 : midLine < width - 1) {
             whiteLineLeft = getWhiteCount(letter.getOriginalPicRBG(), midLine - 1, height, false);
             whiteLineMid = getWhiteCount(letter.getOriginalPicRBG(), midLine, height, false);
             whiteLineRight = getWhiteCount(letter.getOriginalPicRBG(), midLine + 1, height, false);

@@ -7,6 +7,7 @@ package com.louie.douban.util;
 public class Parameters {
     public static final String PATH = System.getProperties().getProperty("user.dir");
     public static final String HOSTPAGE = "https://www.douban.com/group";
+    public static final String CodeIdentifyDataPath = PATH + "/data/CodeIdentifyData.data";
 
     public static final double similarity = Double.parseDouble(ImportFileUtils.getPropertiesCodeIdentify().getProperty("similarity"));      //相似程度
     public static final double deviation = Double.parseDouble(ImportFileUtils.getPropertiesCodeIdentify().getProperty("deviation"));    //误差系数

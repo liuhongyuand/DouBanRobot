@@ -29,7 +29,7 @@ public class CodeProcess extends AbstractPicProcess {
             int[][] newRGB;
             newRGB = removeColor(image, width, height);
             for (int i = 0; i < 2; i++) {
-                newRGB = doDenoising(image, newRGB, width, height);
+                denoising(image, newRGB, width, height);
             }
             divideToLetter(newRGB, image.getHeight(), image.getWidth());
             LETTERS.forEach((letter -> {
@@ -48,4 +48,5 @@ public class CodeProcess extends AbstractPicProcess {
         }
         return new Object[]{letters};
     }
+
 }

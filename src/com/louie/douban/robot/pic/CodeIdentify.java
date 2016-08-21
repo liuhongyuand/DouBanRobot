@@ -2,22 +2,24 @@ package com.louie.douban.robot.pic;
 
 import com.louie.douban.robot.services.AbstractPicProcess;
 import com.louie.douban.robot.services.CodeImport;
-import com.louie.douban.util.ImportFileUtils;
+import com.louie.douban.robot.services.CodeProcess;
 import com.louie.douban.util.Parameters;
+import com.louie.douban.util.PointMap;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by liuhongyu.louie on 2016/8/21.
  */
 public class CodeIdentify {
-    private final String FILE = Parameters.PATH + "/training/30955624-d6e8-4d4e-95d0-b923a38c2d04.jpg";
 
-    public void trainingPicIdentify(){
+    private static String[] strings;
+
+    public void trainingPicIdentify(String FILE, boolean importData){
         AbstractPicProcess process = new CodeImport();
         JFrame frame = new JFrame();
         frame.setLayout(null);
@@ -37,10 +39,36 @@ public class CodeIdentify {
             temp = temp + buffer.getWidth() + 20;
         }
         frame.setVisible(true);
+        if (importData) {
+            int letterNum = 0;
+            for (Object letterObj : letters) {
+                List<Point> letterList = (List<Point>) letterObj;
+                    if (!strings[letterNum].equals("")) {
+                        PointMap.put(strings[letterNum], letterList);
+                    }
+                letterNum++;
+            }
+        }
+        System.out.println("Map size: " + PointMap.mapSize());
+    }
+
+    public void getCode(String FILE){
+        AbstractPicProcess process = new CodeProcess();
+        Object[] results = process.process(FILE);
+        List<?> letters = (List<?>) results[0];
+        for (Object letterObj : letters) {
+            List<Point> letterList = (List<Point>) letterObj;
+            System.out.print(PointMap.getLetter(letterList, Parameters.deviation, Parameters.similarity));
+        }
+        System.out.println();
     }
 
     public static void main(String[] args){
-        new CodeIdentify().trainingPicIdentify();
+        strings = new String[]{"w", "r", "o", "n", "g", "", "", "", "", ""};
+        final String FILE = Parameters.PATH + "/training/7db520b5-1d44-40f8-a75e-e0a9e0eee274.jpg";
+        final String resources = Parameters.PATH + "/resources/captcha4.jpg";
+        new CodeIdentify().trainingPicIdentify(FILE, false);
+        new CodeIdentify().getCode(FILE);
     }
 
 }
