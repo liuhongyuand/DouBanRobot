@@ -3,6 +3,7 @@ package com.louie.douban.robot.pic;
 import com.louie.douban.model.Letter;
 import com.louie.douban.util.Parameters;
 import com.louie.douban.util.Type;
+import org.apache.commons.math3.stat.descriptive.moment.Variance;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +29,10 @@ public class Process {
     private static final int target = 16711423;             //黑色
     private static final int difRate = 8000000/4;           //色值偏移
     private static final int nearby = 1;                    //像素位
-    public static final int LETTER_WIDTH = 20;             //字母宽度
+    public static final int LETTER_WIDTH = 23;             //字母宽度
     private static final int LETTER_GAP = 1;               //字母间隔
     private static final double pixelFilter = 3.5;         //像素过滤
-    private static final String FILE = Parameters.PATH + "/resources/captcha5.jpg";
+    private static final String FILE = Parameters.PATH + "/training/30955624-d6e8-4d4e-95d0-b923a38c2d04.jpg";
     private static final Set<Letter> LETTERS = new LinkedHashSet<>();
     private static final Set<BufferedImage> buffers = new LinkedHashSet<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(Process.class);
@@ -49,21 +50,22 @@ public class Process {
             int height = image.getHeight();
             int[][] newRGB;
             newRGB = removeColor(image, width, height);
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 2; i++) {
                 denoising(image, newRGB, width, height);
             }
             divideToLetter(newRGB, image.getHeight(), image.getWidth());
             LETTERS.forEach((letter -> {
-                BufferedImage bufferImg = new BufferedImage(letter.getEndX() - letter.getStartX(), letter.getEndY() - letter.getStartY(), BufferedImage.TYPE_INT_BGR);
-                denoising(bufferImg, letter.getLetterRGB(), letter.getEndX() - letter.getStartX(), letter.getEndY() - letter.getStartY());
+                BufferedImage bufferImg = new BufferedImage(letter.getWidth(), letter.getHeight(), BufferedImage.TYPE_INT_BGR);
+                denoising(bufferImg, letter.getLetterRGB(), letter.getWidth(), letter.getHeight());
                 int plus = 0;
-                double multi = 1;
-                for (int i = 0 ; i < letter.getEndX() - letter.getStartX(); i++){
-                    for(int j = 0; j < letter.getEndY() - letter.getStartY(); j++){
-                        plus += letter.getLetterRGB()[i][j];
+                double[] pos = new double[letter.getWidth() * letter.getHeight()];
+                for (int i = 0 ; i < letter.getWidth(); i++){
+                    for(int j = 0; j < letter.getHeight(); j++){
+                        if (letter.getLetterRGB()[i][j] != -1 && letter.getLetterRGB()[i][j] != 0){
+
+                        }
                     }
                 }
-                System.out.println(plus + " " + multi);
                 buffers.add(setBufferedImage(bufferImg, letter.getLetterRGB()));
             }));
             int temp = 10;

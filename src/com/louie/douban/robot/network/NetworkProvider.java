@@ -63,7 +63,7 @@ public class NetworkProvider {
                     .data("submit_btn", "点我啊");
             connection.validateTLSCertificates(false);
             Connection.Response response = connection.timeout(10 * 1000).method(Connection.Method.POST).execute();
-            LOGGER.info(response.statusCode() + " " + response.statusMessage() + "\r\n");
+            LOGGER.info(response.body() + " " + response.statusCode() + " " + response.statusMessage() + "\r\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

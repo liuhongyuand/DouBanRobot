@@ -13,6 +13,8 @@ public class Letter {
     private int EndX;
     private int StartY;
     private int EndY;
+    private int width;
+    private int height;
     private int[][] letterRGB;
     private int[][] originalPicRBG;
     private BoundaryLine<Integer, Integer> boundaryLine;
@@ -21,7 +23,7 @@ public class Letter {
         this.originalPicRBG = originalPicRBG;
         this.letterRGB = letterRGB;
         this.StartX = StartX;
-        this.EndX = EndX;
+        this.EndX = EndX - 1;
         this.StartY = 0;
         this.EndY = originalPicRBG[0].length;
         setBoundaryLine(new BoundaryLine<>(StartX, StartX + Process.LETTER_WIDTH));
@@ -91,6 +93,14 @@ public class Letter {
 
     public void setEndY(int endY) {
         EndY = endY;
+    }
+
+    public int getWidth() {
+        return getEndX() - getStartX();
+    }
+
+    public int getHeight() {
+        return getEndY() - getStartY();
     }
 
     public void updateLetterRGB(){
