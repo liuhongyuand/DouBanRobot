@@ -10,19 +10,25 @@ import java.util.List;
  */
 public class PointMap extends HashMap<String, HashSet<java.util.List<Point>>> implements Serializable{
 
-    public void put(String letter, List<Point> pointList){
-        if (this.containsKey(letter)){
-            this.get(letter).add(pointList);
+    private static final PointMap POINT_MAP = new PointMap();
+
+    private PointMap(){
+
+    }
+
+    public static void put(String letter, List<Point> pointList){
+        if (POINT_MAP.containsKey(letter)){
+            POINT_MAP.get(letter).add(pointList);
         } else {
             HashSet<List<Point>> lists = new HashSet<>();
             lists.add(pointList);
-            put(letter, lists);
+            POINT_MAP.put(letter, lists);
         }
     }
 
-    public String getLetter(List<Point> pointKeyList, int deviation, double similarity) {
-        final String[] letter = {null};
-        for (Map.Entry<String, HashSet<List<Point>>> entry : entrySet()){
+    public static String getLetter(List<Point> pointKeyList, double deviation, double similarity) {
+        final String[] letter = {""};
+        for (Map.Entry<String, HashSet<List<Point>>> entry : POINT_MAP.entrySet()){
             for (List<Point> PointList : entry.getValue()){
                 int[] findNum = {0};
                 pointKeyList.forEach((KeyPoint -> PointList.forEach(ValuePoint-> {
@@ -35,14 +41,14 @@ public class PointMap extends HashMap<String, HashSet<java.util.List<Point>>> im
                     break;
                 }
             }
-            if (letter[0] != null){
+            if (!letter[0].isEmpty()){
                 break;
             }
         }
         return letter[0];
     }
 
-    private boolean isInner(Point pointValue, Point pointKey, int deviation){
+    private static boolean isInner(Point pointValue, Point pointKey, double deviation){
         int differenceX = Math.abs(pointKey.x - pointValue.x);
         int differenceY = Math.abs(pointKey.y - pointValue.y);
         return differenceX <= deviation && differenceY <= deviation;

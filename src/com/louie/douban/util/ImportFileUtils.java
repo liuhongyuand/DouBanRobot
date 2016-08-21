@@ -21,8 +21,12 @@ import java.util.Properties;
  */
 public class ImportFileUtils {
 
+    private static final Properties propertiesCodeIdentify = new Properties();
     private static final Logger LOG = LoggerFactory.getLogger(ImportFileUtils.class);
 
+    static {
+        initHEAD();
+    }
     public static void initUsers(){
         File myXML = new File(Parameters.PATH + "/conf/Users.xml");
         SAXReader saxReader = new SAXReader();
@@ -51,12 +55,17 @@ public class ImportFileUtils {
             properties.load(new FileReader(new File(Parameters.PATH + "/conf/HEAD.properties")));
             propertiesComment.load(new FileReader(new File(Parameters.PATH + "/conf/COMMENT.properties")));
             propertiesCommentFORM.load(new FileReader(new File(Parameters.PATH + "/conf/COMMENT_FORM.properties")));
+            propertiesCodeIdentify.load(new FileReader(new File(Parameters.PATH + "/conf/IdentifyParameters.properties")));
             properties.entrySet().forEach((k) -> GlobalCollections.HEAD.put(k.getKey().toString(), k.getValue().toString()));
             propertiesComment.entrySet().forEach((k) -> GlobalCollections.COMMENT_HEAD.put(k.getKey().toString(), k.getValue().toString()));
             propertiesCommentFORM.entrySet().forEach((k) -> GlobalCollections.COMMENT_FORM.put(k.getKey().toString(), k.getValue().toString()));
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
+    }
+
+    public static Properties getPropertiesCodeIdentify(){
+        return propertiesCodeIdentify;
     }
 
     @Test

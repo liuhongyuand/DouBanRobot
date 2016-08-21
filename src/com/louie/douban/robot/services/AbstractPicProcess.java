@@ -1,98 +1,29 @@
-package com.louie.douban.robot.pic;
+package com.louie.douban.robot.services;
 
 import com.louie.douban.model.Letter;
-import com.louie.douban.util.Parameters;
 import com.louie.douban.util.Type;
-import org.apache.commons.math3.stat.descriptive.moment.Variance;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
-import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.*;
 
+import static com.louie.douban.util.Parameters.*;
+
 /**
- * Process the pic
- * Created by liuhongyu.louie on 2016/7/20.
+ * Created by liuhongyu.louie on 2016/8/21.
  */
-public class Process {
+public abstract class AbstractPicProcess {
 
-    private static final double eliminateValue = 0.92;     //过滤没有验证码的模块
-    private static final int target = 16711423;             //黑色
-    private static final int difRate = 8000000/4;           //色值偏移
-    private static final int nearby = 1;                    //像素位
-    public static final int LETTER_WIDTH = 23;             //字母宽度
-    private static final int LETTER_GAP = 1;               //字母间隔
-    private static final double pixelFilter = 3.5;         //像素过滤
-    private static final String FILE = Parameters.PATH + "/training/30955624-d6e8-4d4e-95d0-b923a38c2d04.jpg";
-    private static final Set<Letter> LETTERS = new LinkedHashSet<>();
-    private static final Set<BufferedImage> buffers = new LinkedHashSet<>();
-    private static final Logger LOGGER = LoggerFactory.getLogger(Process.class);
+    final Set<Letter> LETTERS = new LinkedHashSet<>();
+    final Set<BufferedImage> buffers = new LinkedHashSet<>();
 
-    public static void processPic(String img) {
-        File pic = new File(img);
-        try {
-            BufferedImage image = ImageIO.read(pic);
-            JFrame frame = new JFrame();
-            frame.setLayout(null);
-            frame.setSize(image.getWidth() + 10, image.getHeight() * 2 + 10);
-            frame.setLocationRelativeTo(null);
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            int width = image.getWidth();
-            int height = image.getHeight();
-            int[][] newRGB;
-            newRGB = removeColor(image, width, height);
-            for (int i = 0; i < 2; i++) {
-                denoising(image, newRGB, width, height);
-            }
-            divideToLetter(newRGB, image.getHeight(), image.getWidth());
-            LETTERS.forEach((letter -> {
-                BufferedImage bufferImg = new BufferedImage(letter.getWidth(), letter.getHeight(), BufferedImage.TYPE_INT_BGR);
-                denoising(bufferImg, letter.getLetterRGB(), letter.getWidth(), letter.getHeight());
-                int plus = 0;
-                double[] pos = new double[letter.getWidth() * letter.getHeight()];
-                for (int i = 0 ; i < letter.getWidth(); i++){
-                    for(int j = 0; j < letter.getHeight(); j++){
-                        if (letter.getLetterRGB()[i][j] != -1 && letter.getLetterRGB()[i][j] != 0){
+    abstract public Object[] process(String imgPath);
 
-                        }
-                    }
-                }
-                buffers.add(setBufferedImage(bufferImg, letter.getLetterRGB()));
-            }));
-            int temp = 10;
-            for (BufferedImage buffer : buffers) {
-                JLabel label = new JLabel("");
-                label.setIcon(new ImageIcon(buffer));
-                label.setBounds(temp, 0, buffer.getWidth(), buffer.getHeight());
-                frame.add(label);
-                temp = temp + buffer.getWidth() + 20;
-            }
-            frame.setVisible(true);
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
-
-    private static double getDouble(double num, int pos){
-        BigDecimal bd = new BigDecimal(num);
-        return bd.setScale(pos ,BigDecimal.ROUND_HALF_UP).doubleValue();
-    }
-
-    private static void denoising(BufferedImage image, int[][] newRGB, int width, int height){
+    void denoising(BufferedImage image, int[][] newRGB, int width, int height){
         newRGB = doDenoising(image, newRGB, width, height);
         setBufferedImage(image, newRGB);
     }
 
-    private static BufferedImage setBufferedImage(BufferedImage img, int[][] RGB){
+    BufferedImage setBufferedImage(BufferedImage img, int[][] RGB){
         for (int i = 0; i < RGB.length; i++) {
             for (int j = 0; j < RGB[0].length; j++) {
                 img.setRGB(i, j, RGB[i][j]);
@@ -101,7 +32,7 @@ public class Process {
         return img;
     }
 
-    private static int[][] removeColor(BufferedImage image, int width, int height){
+    int[][] removeColor(BufferedImage image, int width, int height){
         int[][] newRGB = new int[width][height];
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -116,7 +47,7 @@ public class Process {
         return newRGB;
     }
 
-    private static int[][] doDenoising(BufferedImage image, int[][] newRGB, int width, int height){
+    int[][] doDenoising(BufferedImage image, int[][] newRGB, int width, int height){
         for (int i = 0; i < width; i++){
             for (int j = 0; j < height; j++){
                 for (int position = 1; position <= nearby; position++) {
@@ -129,7 +60,7 @@ public class Process {
         return newRGB;
     }
 
-    private static boolean differRate(BufferedImage image, int x, int y, int width, int height, int position) {
+    private boolean differRate(BufferedImage image, int x, int y, int width, int height, int position) {
         int StartPointRGB = image.getRGB(x, y);
         final int[] isDiff = {0};
         int up, down, left, right, leftUp, leftDown, rightUp, rightDown;
@@ -175,16 +106,14 @@ public class Process {
         return isDiff[0] >= RGBCircle.get(StartPointRGB).size()/4 * 3;
     }
 
-    private static void divideToLetter(int[][] picRGB, int height, int width){
+    void divideToLetter(int[][] picRGB, int height, int width){
         for (int num = 0; num < width; num = num + LETTER_WIDTH + LETTER_GAP) {
             final int[][] LETTER = new int[LETTER_WIDTH][height];
             for (int WIDTH = num; WIDTH < num + LETTER_WIDTH; WIDTH++) {
                 if (WIDTH >= width){
                     break;
                 }
-                for(int HEIGHT = 0; HEIGHT < height; HEIGHT++){
-                    LETTER[WIDTH - num][HEIGHT] = picRGB[WIDTH][HEIGHT];
-                }
+                System.arraycopy(picRGB[WIDTH], 0, LETTER[WIDTH - num], 0, height);
             }
             Letter letter = boundaryIdentification(new Letter(picRGB, LETTER, num, num + LETTER_WIDTH));
             if (letter.isUseful()) {
@@ -194,7 +123,7 @@ public class Process {
 
     }
 
-    private static Letter boundaryIdentification(Letter letter){
+    private Letter boundaryIdentification(Letter letter){
         if (usefulCheck(letter)){
             letter = boundaryLocateHorizontal(boundaryLocateHorizontal(letter, Type.BoundaryDirection.LEFT), Type.BoundaryDirection.RIGHT);
             return boundaryLocateVertical(boundaryLocateVertical(letter, Type.BoundaryDirection.UP), Type.BoundaryDirection.DOWN);
@@ -203,7 +132,7 @@ public class Process {
         return letter;
     }
 
-    private static Letter boundaryLocateHorizontal(Letter letter, Type.BoundaryDirection type){
+    private Letter boundaryLocateHorizontal(Letter letter, Type.BoundaryDirection type){
         double whiteLineLeft;
         double whiteLineMid;
         double whiteLineRight;
@@ -235,7 +164,7 @@ public class Process {
         return letter;
     }
 
-    private static Letter boundaryLocateVertical(Letter letter, Type.BoundaryDirection type){
+    private Letter boundaryLocateVertical(Letter letter, Type.BoundaryDirection type){
         double whiteLineUp = 0;
         double whiteLineMid = 0;
         double whiteLineDown = 0;
@@ -269,7 +198,7 @@ public class Process {
         return letter;
     }
 
-    private static int getWhiteCount(int[][] RGB, int x, int length, boolean isVertical){
+    private int getWhiteCount(int[][] RGB, int x, int length, boolean isVertical){
         int whiteCount = 0;
         for (int i = 0; i < length; i++) {
             if (isVertical){
@@ -285,7 +214,7 @@ public class Process {
         return whiteCount;
     }
 
-    private static boolean usefulCheck(Letter letter){
+    private boolean usefulCheck(Letter letter){
         int[][] RGB = letter.getLetterRGB();
         double useless = 0;
         double width = RGB.length;
@@ -300,8 +229,5 @@ public class Process {
         return useless/(width * height) < eliminateValue; //when useless/(width * height) < eliminateValue, the data is useful;
     }
 
-    public static void main(String[] args) {
-        processPic(FILE);
-    }
 
 }

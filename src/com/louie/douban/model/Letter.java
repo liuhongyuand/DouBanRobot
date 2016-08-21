@@ -1,6 +1,6 @@
 package com.louie.douban.model;
 
-import com.louie.douban.robot.pic.Process;
+import static com.louie.douban.util.Parameters.LETTER_WIDTH;
 
 /**
  * Auth letter
@@ -26,7 +26,7 @@ public class Letter {
         this.EndX = EndX - 1;
         this.StartY = 0;
         this.EndY = originalPicRBG[0].length;
-        setBoundaryLine(new BoundaryLine<>(StartX, StartX + Process.LETTER_WIDTH));
+        setBoundaryLine(new BoundaryLine<>(StartX, StartX + LETTER_WIDTH));
     }
 
     public boolean isUseful() {
@@ -76,7 +76,7 @@ public class Letter {
     public void setStartX(int startX) {
         this.StartX = startX;
         getBoundaryLine().setX(startX);
-        getBoundaryLine().setY(startX + Process.LETTER_WIDTH);
+        getBoundaryLine().setY(startX + LETTER_WIDTH);
     }
 
     public int getStartY() {
