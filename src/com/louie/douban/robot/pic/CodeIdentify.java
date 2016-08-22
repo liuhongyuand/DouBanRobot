@@ -64,9 +64,9 @@ public class CodeIdentify {
     }
 
     public static void main(String[] args){
-        strings = new String[]{"w", "r", "o", "n", "g", "", "", "", "", ""};
-        final String FILE = Parameters.PATH + "/training/7db520b5-1d44-40f8-a75e-e0a9e0eee274.jpg";
-        final String resources = Parameters.PATH + "/resources/captcha4.jpg";
+        strings = new String[]{"", "", "t", "e", "", "", "", "", "", "", "", "", "", ""};
+        final String FILE = Parameters.PATH + "/training/a62c8c70-970a-4a4d-875c-dd23e6b83428.jpg";
+        final String resources = Parameters.PATH + "/resources/d70cf794-536c-4641-b009-9e342ebb1143.jpg";
         new CodeIdentify().trainingPicIdentify(FILE, false);
         new CodeIdentify().getCode(FILE);
     }
