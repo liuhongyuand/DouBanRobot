@@ -1,6 +1,12 @@
-package com.louie.douban.robot.service.core;
+package com.louie.douban.robot.services.core;
+
+import com.louie.douban.model.Letter;
+import com.louie.douban.util.Type;
 
 import java.awt.image.BufferedImage;
+import java.util.*;
+
+import static com.louie.douban.util.Parameters.*;
 
 /**
  * Created by liuhongyu.louie on 2016/8/21.

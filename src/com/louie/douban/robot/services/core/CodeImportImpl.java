@@ -1,13 +1,13 @@
-package com.louie.douban.robot.service.core;
+package com.louie.douban.robot.services.core;
 
 import com.louie.douban.model.Letter;
-import com.louie.douban.robot.service.core.color.BinaryValue;
-import com.louie.douban.robot.service.core.cut.CharCutService;
-import com.louie.douban.robot.service.core.noise.NoiseProcessService;
-import com.louie.douban.robot.service.core.noise.PointScan;
-import com.louie.douban.robot.service.AuthCodeProcess;
-import com.louie.douban.robot.service.core.color.ColorProcessService;
-import com.louie.douban.robot.service.core.cut.LineScan;
+import com.louie.douban.robot.services.AuthCodeProcess;
+import com.louie.douban.robot.services.core.color.BinaryValue;
+import com.louie.douban.robot.services.core.color.ColorProcessService;
+import com.louie.douban.robot.services.core.cut.CharCutService;
+import com.louie.douban.robot.services.core.cut.LineScan;
+import com.louie.douban.robot.services.core.noise.NoiseProcessService;
+import com.louie.douban.robot.services.core.noise.PointScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

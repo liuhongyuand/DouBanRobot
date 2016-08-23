@@ -1,4 +1,4 @@
-package com.louie.douban.robot.service.core.color;
+package com.louie.douban.robot.services.core.color;
 
 /**
  * Created by liuhongyu.louie on 2016/8/23.

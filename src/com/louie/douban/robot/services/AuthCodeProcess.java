@@ -1,4 +1,4 @@
-package com.louie.douban.robot.service;
+package com.louie.douban.robot.services;
 
 /**
  * Created by liuhongyu.louie on 2016/8/23.

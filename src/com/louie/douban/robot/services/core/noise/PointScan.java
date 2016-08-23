@@ -1,6 +1,6 @@
-package com.louie.douban.robot.service.core.noise;
+package com.louie.douban.robot.services.core.noise;
 
-import com.louie.douban.robot.service.core.color.ColorProcessService;
+import com.louie.douban.robot.services.core.color.ColorProcessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

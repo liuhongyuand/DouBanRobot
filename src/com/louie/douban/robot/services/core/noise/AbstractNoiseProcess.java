@@ -1,4 +1,4 @@
-package com.louie.douban.robot.service.core.noise;
+package com.louie.douban.robot.services.core.noise;
 
 import java.awt.image.BufferedImage;
 
