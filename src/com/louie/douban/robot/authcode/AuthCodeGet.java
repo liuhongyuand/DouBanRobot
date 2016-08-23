@@ -1,15 +1,12 @@
-package com.louie.douban.robot.pic;
+package com.louie.douban.robot.authcode;
 
-import com.louie.douban.robot.network.NetworkProvider;
 import com.louie.douban.util.GlobalCollections;
 import com.louie.douban.util.ImportFileUtils;
 import com.louie.douban.util.Parameters;
-import com.louie.douban.util.TimeUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

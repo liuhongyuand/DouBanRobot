@@ -1,8 +1,8 @@
-package com.louie.douban.robot.pic;
+package com.louie.douban.robot.authcode;
 
-import com.louie.douban.robot.services.AbstractPicProcess;
-import com.louie.douban.robot.services.CodeImport;
-import com.louie.douban.robot.services.CodeProcess;
+import com.louie.douban.robot.authcode.engine.AuthCodeProcess;
+import com.louie.douban.robot.authcode.engine.core.CodeImportImpl;
+import com.louie.douban.robot.authcode.engine.core.CodeProcessImpl;
 import com.louie.douban.util.Parameters;
 import com.louie.douban.util.PointMap;
 
@@ -20,7 +20,7 @@ public class CodeIdentify {
     private static String[] strings;
 
     public void trainingPicIdentify(String FILE, boolean importData){
-        AbstractPicProcess process = new CodeImport();
+        AuthCodeProcess process = new CodeImportImpl();
         JFrame frame = new JFrame();
         frame.setLayout(null);
         frame.setSize(600, 100);
@@ -53,7 +53,7 @@ public class CodeIdentify {
     }
 
     public void getCode(String FILE){
-        AbstractPicProcess process = new CodeProcess();
+        AuthCodeProcess process = new CodeProcessImpl();
         Object[] results = process.process(FILE);
         List<?> letters = (List<?>) results[0];
         for (Object letterObj : letters) {
@@ -66,9 +66,9 @@ public class CodeIdentify {
     public static void main(String[] args){
         strings = new String[]{"", "", "t", "e", "", "", "", "", "", "", "", "", "", ""};
         final String FILE = Parameters.PATH + "/training/a62c8c70-970a-4a4d-875c-dd23e6b83428.jpg";
-        final String resources = Parameters.PATH + "/training/09a5095e-a128-4f1c-b3bd-4d2c1fe43c43.jpg";
-        new CodeIdentify().trainingPicIdentify(resources, false);
-        new CodeIdentify().getCode(resources);
+        final String resources = Parameters.PATH + "/resources/captcha4.jpg";
+        new CodeIdentify().trainingPicIdentify(FILE, false);
+        new CodeIdentify().getCode(FILE);
     }
 
 }
