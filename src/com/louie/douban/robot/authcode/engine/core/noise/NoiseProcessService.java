@@ -1,6 +1,6 @@
-package com.louie.douban.robot.services.core.noise;
+package com.louie.douban.robot.authcode.engine.core.noise;
 
-import com.louie.douban.robot.services.core.color.ColorProcessService;
+import com.louie.douban.robot.authcode.engine.core.color.ColorProcessService;
 
 /**
  * Created by liuhongyu.louie on 2016/8/23.

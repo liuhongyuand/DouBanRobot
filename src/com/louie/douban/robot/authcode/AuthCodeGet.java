@@ -1,4 +1,4 @@
-package com.louie.douban.robot.pic;
+package com.louie.douban.robot.authcode;
 
 import com.louie.douban.util.GlobalCollections;
 import com.louie.douban.util.ImportFileUtils;

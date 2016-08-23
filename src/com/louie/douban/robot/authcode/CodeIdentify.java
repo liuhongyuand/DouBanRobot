@@ -1,8 +1,8 @@
-package com.louie.douban.robot.pic;
+package com.louie.douban.robot.authcode;
 
-import com.louie.douban.robot.services.AuthCodeProcess;
-import com.louie.douban.robot.services.core.CodeImportImpl;
-import com.louie.douban.robot.services.core.CodeProcessImpl;
+import com.louie.douban.robot.authcode.engine.AuthCodeProcess;
+import com.louie.douban.robot.authcode.engine.core.CodeImportImpl;
+import com.louie.douban.robot.authcode.engine.core.CodeProcessImpl;
 import com.louie.douban.util.Parameters;
 import com.louie.douban.util.PointMap;
 
