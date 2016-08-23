@@ -66,9 +66,9 @@ public class CodeIdentify {
     public static void main(String[] args){
         strings = new String[]{"", "", "t", "e", "", "", "", "", "", "", "", "", "", ""};
         final String FILE = Parameters.PATH + "/training/a62c8c70-970a-4a4d-875c-dd23e6b83428.jpg";
-        final String resources = Parameters.PATH + "/resources/d70cf794-536c-4641-b009-9e342ebb1143.jpg";
-        new CodeIdentify().trainingPicIdentify(FILE, false);
-        new CodeIdentify().getCode(FILE);
+        final String resources = Parameters.PATH + "/training/09a5095e-a128-4f1c-b3bd-4d2c1fe43c43.jpg";
+        new CodeIdentify().trainingPicIdentify(resources, false);
+        new CodeIdentify().getCode(resources);
     }
 
 }
