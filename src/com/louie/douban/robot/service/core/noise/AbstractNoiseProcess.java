@@ -1,4 +1,4 @@
-package com.louie.douban.robot.authcode.engine.core.noise;
+package com.louie.douban.robot.service.core.noise;
 
 import java.awt.image.BufferedImage;
 

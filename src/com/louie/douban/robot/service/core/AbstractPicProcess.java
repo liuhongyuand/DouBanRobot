@@ -1,4 +1,4 @@
-package com.louie.douban.robot.authcode.engine.core;
+package com.louie.douban.robot.service.core;
 
 import java.awt.image.BufferedImage;
 

@@ -1,4 +1,4 @@
-package com.louie.douban.robot.authcode.engine.core.color;
+package com.louie.douban.robot.service.core.color;
 
 import static com.louie.douban.util.Parameters.difRate;
 import static com.louie.douban.util.Parameters.target;

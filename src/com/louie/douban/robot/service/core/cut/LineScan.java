@@ -1,4 +1,4 @@
-package com.louie.douban.robot.authcode.engine.core.cut;
+package com.louie.douban.robot.service.core.cut;
 
 import com.louie.douban.model.Letter;
 import com.louie.douban.util.Type;

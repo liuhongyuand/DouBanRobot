@@ -1,13 +1,13 @@
-package com.louie.douban.robot.authcode.engine.core;
+package com.louie.douban.robot.service.core;
 
 import com.louie.douban.model.Letter;
-import com.louie.douban.robot.authcode.engine.AuthCodeProcess;
-import com.louie.douban.robot.authcode.engine.core.color.BinaryValue;
-import com.louie.douban.robot.authcode.engine.core.color.ColorProcessService;
-import com.louie.douban.robot.authcode.engine.core.cut.CharCutService;
-import com.louie.douban.robot.authcode.engine.core.cut.LineScan;
-import com.louie.douban.robot.authcode.engine.core.noise.NoiseProcessService;
-import com.louie.douban.robot.authcode.engine.core.noise.PointScan;
+import com.louie.douban.robot.service.core.noise.NoiseProcessService;
+import com.louie.douban.robot.service.core.noise.PointScan;
+import com.louie.douban.robot.service.AuthCodeProcess;
+import com.louie.douban.robot.service.core.color.BinaryValue;
+import com.louie.douban.robot.service.core.color.ColorProcessService;
+import com.louie.douban.robot.service.core.cut.CharCutService;
+import com.louie.douban.robot.service.core.cut.LineScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
