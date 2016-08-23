@@ -1,126 +1,35 @@
-package com.louie.douban.robot.services;
+package com.louie.douban.robot.services.core.cut;
 
 import com.louie.douban.model.Letter;
 import com.louie.douban.util.Type;
 
-import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static com.louie.douban.util.Parameters.*;
 
 /**
- * Created by liuhongyu.louie on 2016/8/21.
+ * Created by liuhongyu.louie on 2016/8/23.
  */
-public abstract class AbstractPicProcess {
+public class LineScan implements CharCutService{
 
-    final Set<Letter> LETTERS = new LinkedHashSet<>();
-    final Set<BufferedImage> buffers = new LinkedHashSet<>();
-
-    abstract public Object[] process(String imgPath);
-
-    void denoising(BufferedImage image, int[][] newRGB, int width, int height){
-        newRGB = doDenoising(image, newRGB, width, height);
-        setBufferedImage(image, newRGB);
-    }
-
-    BufferedImage setBufferedImage(BufferedImage img, int[][] RGB){
-        for (int i = 0; i < RGB.length; i++) {
-            for (int j = 0; j < RGB[0].length; j++) {
-                img.setRGB(i, j, RGB[i][j]);
-            }
-        }
-        return img;
-    }
-
-    int[][] removeColor(BufferedImage image, int width, int height){
-        int[][] newRGB = new int[width][height];
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                int nowPoint = image.getRGB(i, j) < 0 ? image.getRGB(i, j) * -1 : image.getRGB(i, j);
-                if (target - nowPoint < difRate || nowPoint - target > difRate ) {
-                    newRGB[i][j] = image.getRGB(i, j);
-                }else {
-                    newRGB[i][j] = -1;
-                }
-            }
-        }
-        return newRGB;
-    }
-
-    int[][] doDenoising(BufferedImage image, int[][] newRGB, int width, int height){
-        for (int i = 0; i < width; i++){
-            for (int j = 0; j < height; j++){
-                for (int position = 1; position <= nearby; position++) {
-                    if (differRate(image, i, j, width, height, nearby)) {
-                        newRGB[i][j] = -1;
-                    }
-                }
-            }
-        }
-        return newRGB;
-    }
-
-    private boolean differRate(BufferedImage image, int x, int y, int width, int height, int position) {
-        int StartPointRGB = image.getRGB(x, y);
-        final int[] isDiff = {0};
-        int up, down, left, right, leftUp, leftDown, rightUp, rightDown;
-        final Map<Integer, Vector<Integer>> RGBCircle = new HashMap<>();
-        RGBCircle.put(StartPointRGB, new Vector<>());
-        if (x - position > 0) {
-            left = StartPointRGB - image.getRGB(x - position, y);
-            RGBCircle.get(StartPointRGB).add(left);
-            if (y - position > 0) {
-                leftDown = StartPointRGB - image.getRGB(x - position, y - position);
-                RGBCircle.get(StartPointRGB).add(leftDown);
-            }
-        }
-        if (x + position < width) {
-            right = StartPointRGB - image.getRGB(x + position, y);
-            RGBCircle.get(StartPointRGB).add(right);
-            if (y + position < height) {
-                rightUp = StartPointRGB - image.getRGB(x + position, y + position);
-                RGBCircle.get(StartPointRGB).add(rightUp);
-            }
-        }
-        if (y - position >= 0) {
-            down = StartPointRGB - image.getRGB(x, y - position);
-            RGBCircle.get(StartPointRGB).add(down);
-            if (x + position < width) {
-                rightDown = StartPointRGB - image.getRGB(x + position, y - position);
-                RGBCircle.get(StartPointRGB).add(rightDown);
-            }
-        }
-        if (y + position < height) {
-            up = StartPointRGB - image.getRGB(x, y + position);
-            RGBCircle.get(StartPointRGB).add(up);
-            if (x - position > 0) {
-                leftUp = StartPointRGB - image.getRGB(x - position, y + position);
-                RGBCircle.get(StartPointRGB).add(leftUp);
-            }
-        }
-        RGBCircle.forEach((k, v) -> v.forEach((value) -> {
-            if (value < 0 ? value * -1 > difRate : value > difRate || value < 0 ? value * -1 > difRate : value > difRate){
-                isDiff[0] = isDiff[0] + 1;
-            }
-        }));
-        return isDiff[0] >= RGBCircle.get(StartPointRGB).size()/4 * 3;
-    }
-
-    void divideToLetter(int[][] picRGB, int height, int width){
-        for (int num = 0; num < width; num = num + LETTER_WIDTH + LETTER_GAP) {
-            final int[][] LETTER = new int[LETTER_WIDTH][height];
+    @Override
+    public Set<Letter> divideToLetters(int[][] RGB){
+        final Set<Letter> letterSet = new LinkedHashSet<>();
+        for (int num = 0; num < RGB.length; num = num + LETTER_WIDTH + LETTER_GAP) {
+            final int[][] LETTER = new int[LETTER_WIDTH][RGB[0].length];
             for (int WIDTH = num; WIDTH < num + LETTER_WIDTH; WIDTH++) {
-                if (WIDTH >= width){
+                if (WIDTH >= RGB.length){
                     break;
                 }
-                System.arraycopy(picRGB[WIDTH], 0, LETTER[WIDTH - num], 0, height);
+                System.arraycopy(RGB[WIDTH], 0, LETTER[WIDTH - num], 0, RGB[0].length);
             }
-            Letter letter = boundaryIdentification(new Letter(picRGB, LETTER, num, num + LETTER_WIDTH));
+            Letter letter = boundaryIdentification(new Letter(RGB, LETTER, num, num + LETTER_WIDTH));
             if (letter.isUseful()) {
-                LETTERS.add(letter);
+                letterSet.add(letter);
             }
         }
-
+        return letterSet;
     }
 
     private Letter boundaryIdentification(Letter letter){
@@ -228,6 +137,5 @@ public abstract class AbstractPicProcess {
         }
         return useless/(width * height) < eliminateValue; //when useless/(width * height) < eliminateValue, the data is useful;
     }
-
 
 }
