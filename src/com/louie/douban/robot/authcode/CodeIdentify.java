@@ -1,6 +1,7 @@
 package com.louie.douban.robot.authcode;
 
 import com.louie.douban.robot.authcode.engine.AuthCodeProcess;
+import com.louie.douban.robot.authcode.engine.core.AbstractPicProcess;
 import com.louie.douban.robot.authcode.engine.core.CodeImportImpl;
 import com.louie.douban.robot.authcode.engine.core.CodeProcessImpl;
 import com.louie.douban.util.Parameters;
@@ -19,7 +20,28 @@ public class CodeIdentify {
 
     private static String[] strings;
 
-    public void trainingPicIdentify(String FILE, boolean importData){
+    private void codeView(final String FILE){
+        CodeImportImpl.isDivide = false;
+        AuthCodeProcess process = new CodeImportImpl();
+        JFrame frame = new JFrame();
+        frame.setLayout(null);
+        frame.setSize(600, 100);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        Object[] results = process.process(FILE);
+        int[][] imageRGB = (int[][]) results[0];
+        BufferedImage image = new BufferedImage(imageRGB.length, imageRGB[0].length, BufferedImage.TYPE_INT_RGB);
+        image = AbstractPicProcess.setBufferedImage(image, imageRGB);
+        JLabel label = new JLabel(new ImageIcon(image));
+        JLabel labe2 = new JLabel(new ImageIcon(FILE));
+        label.setSize(image.getWidth(), image.getHeight());
+        labe2.setBounds(image.getWidth(), 0, image.getWidth(), image.getHeight());
+        frame.add(label);
+        frame.add(labe2);
+        frame.setVisible(true);
+    }
+
+    public void trainingPicIdentify(final String FILE, boolean importData){
         AuthCodeProcess process = new CodeImportImpl();
         JFrame frame = new JFrame();
         frame.setLayout(null);
@@ -52,7 +74,7 @@ public class CodeIdentify {
         System.out.println("Map size: " + PointMap.mapSize());
     }
 
-    public void getCode(String FILE){
+    public void getCode(final String FILE){
         AuthCodeProcess process = new CodeProcessImpl();
         Object[] results = process.process(FILE);
         List<?> letters = (List<?>) results[0];
@@ -67,8 +89,9 @@ public class CodeIdentify {
         strings = new String[]{"", "", "t", "e", "", "", "", "", "", "", "", "", "", ""};
         final String FILE = Parameters.PATH + "/training/a62c8c70-970a-4a4d-875c-dd23e6b83428.jpg";
         final String resources = Parameters.PATH + "/resources/captcha4.jpg";
-        new CodeIdentify().trainingPicIdentify(FILE, false);
-        new CodeIdentify().getCode(FILE);
+        new CodeIdentify().codeView(resources);
+//        new CodeIdentify().trainingPicIdentify(resources, false);
+//        new CodeIdentify().getCode(resources);
     }
 
 }

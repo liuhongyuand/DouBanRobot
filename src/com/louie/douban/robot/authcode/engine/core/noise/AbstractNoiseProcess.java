@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
  */
 public abstract class AbstractNoiseProcess {
 
-    protected int[][] imageToRGBArray(BufferedImage image){
+    public static int[][] imageToRGBArray(BufferedImage image){
         int[][] RGB = new int[image.getWidth()][image.getHeight()];
         for (int width = 0; width < RGB.length; width++) {
             for (int height = 0; height < RGB[0].length; height++) {

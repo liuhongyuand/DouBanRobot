@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
  */
 public abstract class AbstractPicProcess {
 
-    BufferedImage setBufferedImage(BufferedImage img, int[][] RGB){
+    public static BufferedImage setBufferedImage(BufferedImage img, int[][] RGB){
         for (int i = 0; i < RGB.length; i++) {
             for (int j = 0; j < RGB[0].length; j++) {
                 img.setRGB(i, j, RGB[i][j]);

@@ -1,6 +1,7 @@
 package com.louie.douban.robot.authcode.engine.core.noise;
 
 import com.louie.douban.robot.authcode.engine.core.color.ColorProcessService;
+import com.louie.douban.robot.authcode.engine.core.utils.PicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,25 +19,25 @@ import static com.louie.douban.util.Parameters.nearby;
 /**
  * Created by liuhongyu.louie on 2016/8/23.
  */
-public class PointScan extends AbstractNoiseProcess implements NoiseProcessService {
+public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcessService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PointScan.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PointNoiseScan.class);
+
+    @Override
+    public int[][] getImageWithoutNoise(int[][] srcRGB, ColorProcessService colorProcessService) {
+        NoiseProcessService lineScanService = new LineNoiseScan();
+        int[][] newRGB = colorProcessService.processColor(srcRGB);
+        for (int i = 0; i < 2; i++) {
+            newRGB = denoising(srcRGB, newRGB);
+            srcRGB = newRGB;
+        }
+        newRGB = lineScanService.getImageWithoutNoise(newRGB, colorProcessService);
+        return newRGB;
+    }
 
     public int[][] getImageWithoutNoise(String image, ColorProcessService colorProcessService){
-        int[][] newRGB = new int[0][];
-        try {
-            File pic = new File(image);
-            BufferedImage bufferedImage = ImageIO.read(pic);
-            int[][] srcRGB = imageToRGBArray(bufferedImage);
-            newRGB = colorProcessService.processColor(srcRGB);
-            for (int i = 0; i < 2; i++) {
-                newRGB = denoising(srcRGB, newRGB);
-                srcRGB = newRGB;
-            }
-        }catch (IOException e){
-            LOGGER.error(e.getMessage(), e);
-        }
-        return newRGB;
+        int[][] srcRGB = PicUtil.getRGBFromImageFile(image);
+        return this.getImageWithoutNoise(srcRGB, colorProcessService);
     }
 
     private int[][] denoising(int[][] srcRGB, int[][] newRGB){

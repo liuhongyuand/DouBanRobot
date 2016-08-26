@@ -7,6 +7,8 @@ import com.louie.douban.robot.authcode.engine.core.color.ColorProcessService;
  */
 public interface NoiseProcessService {
 
+    int[][] getImageWithoutNoise(int[][] srcRGB, ColorProcessService colorProcessService);
+
     int[][] getImageWithoutNoise(String image, ColorProcessService colorProcessService);
 
 }

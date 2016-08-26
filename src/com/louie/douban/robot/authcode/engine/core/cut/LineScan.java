@@ -1,6 +1,7 @@
 package com.louie.douban.robot.authcode.engine.core.cut;
 
 import com.louie.douban.model.Letter;
+import com.louie.douban.robot.authcode.engine.core.utils.PicUtil;
 import com.louie.douban.util.Type;
 
 import java.util.LinkedHashSet;
@@ -49,9 +50,9 @@ public class LineScan implements CharCutService{
         int height = letter.getOriginalPicRBG()[0].length;
         int midLine = type == Type.BoundaryDirection.LEFT ? letter.getStartX() : letter.getEndX();
         if (type == Type.BoundaryDirection.LEFT ? midLine > 1 : midLine < width - 1) {
-            whiteLineLeft = getWhiteCount(letter.getOriginalPicRBG(), midLine - 1, height, false);
-            whiteLineMid = getWhiteCount(letter.getOriginalPicRBG(), midLine, height, false);
-            whiteLineRight = getWhiteCount(letter.getOriginalPicRBG(), midLine + 1, height, false);
+            whiteLineLeft = PicUtil.getWhitePointCount(letter.getOriginalPicRBG(), midLine - 1, height, false);
+            whiteLineMid = PicUtil.getWhitePointCount(letter.getOriginalPicRBG(), midLine, height, false);
+            whiteLineRight = PicUtil.getWhitePointCount(letter.getOriginalPicRBG(), midLine + 1, height, false);
             if (whiteLineLeft < whiteLineRight && whiteLineMid < whiteLineRight){
                 if (type == Type.BoundaryDirection.LEFT){
                     letter.setStartX(midLine + 1);
@@ -82,11 +83,11 @@ public class LineScan implements CharCutService{
         int midLine = type == Type.BoundaryDirection.UP ? letter.getStartY() : letter.getEndY() - letter.getStartY() - 1;
         if (midLine < height && midLine >= 0 && letter.getEndY() - letter.getStartY() > 20) {
             if (type == Type.BoundaryDirection.UP) {
-                whiteLineMid = getWhiteCount(letter.getLetterRGB(), midLine, width, true);
-                whiteLineUp = getWhiteCount(letter.getLetterRGB(), midLine + 1, width, true);
+                whiteLineMid = PicUtil.getWhitePointCount(letter.getLetterRGB(), midLine, width, true);
+                whiteLineUp = PicUtil.getWhitePointCount(letter.getLetterRGB(), midLine + 1, width, true);
             } else if (type == Type.BoundaryDirection.DOWN) {
-                whiteLineMid = getWhiteCount(letter.getLetterRGB(), midLine, width, true);
-                whiteLineDown = getWhiteCount(letter.getLetterRGB(), midLine - 1, width, true);
+                whiteLineMid = PicUtil.getWhitePointCount(letter.getLetterRGB(), midLine, width, true);
+                whiteLineDown = PicUtil.getWhitePointCount(letter.getLetterRGB(), midLine - 1, width, true);
             }
             if (whiteLineMid <= whiteLineDown){
                 letter.setEndY(letter.getEndY() - 1);
@@ -105,22 +106,6 @@ public class LineScan implements CharCutService{
         letter.updateLetterRGB();
         letter.setUseful(true);
         return letter;
-    }
-
-    private int getWhiteCount(int[][] RGB, int x, int length, boolean isVertical){
-        int whiteCount = 0;
-        for (int i = 0; i < length; i++) {
-            if (isVertical){
-                if (RGB[i][x] == -1) {
-                    whiteCount++;
-                }
-            }else {
-                if (RGB[x][i] == -1) {
-                    whiteCount++;
-                }
-            }
-        }
-        return whiteCount;
     }
 
     private boolean usefulCheck(Letter letter){
