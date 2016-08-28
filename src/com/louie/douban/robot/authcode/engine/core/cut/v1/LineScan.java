@@ -1,6 +1,7 @@
-package com.louie.douban.robot.authcode.engine.core.cut;
+package com.louie.douban.robot.authcode.engine.core.cut.v1;
 
 import com.louie.douban.model.Letter;
+import com.louie.douban.robot.authcode.engine.core.cut.CharCutService;
 import com.louie.douban.robot.authcode.engine.core.utils.PicUtil;
 import com.louie.douban.util.Type;
 
@@ -10,9 +11,11 @@ import java.util.Set;
 import static com.louie.douban.util.Parameters.*;
 
 /**
+ * Use v2 to replace this divide service
  * Created by liuhongyu.louie on 2016/8/23.
  */
-public class LineScan implements CharCutService{
+@Deprecated
+public class LineScan implements CharCutService {
 
     @Override
     public Set<Letter> divideToLetters(int[][] RGB){
