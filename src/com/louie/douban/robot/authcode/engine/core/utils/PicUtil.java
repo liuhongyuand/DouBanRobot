@@ -17,15 +17,23 @@ public class PicUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PicUtil.class);
 
-    public static int getWhitePointCount(int[][] RGB, int x, int length, boolean isVertical){
+    /**
+     *
+     * @param RGB
+     * @param pos
+     * @param length
+     * @param isVertical height = vertical
+     * @return
+     */
+    public static int getWhitePointCount(int[][] RGB, int pos, int length, boolean isVertical){
         int whiteCount = 0;
         for (int i = 0; i < length; i++) {
             if (isVertical){
-                if (RGB[i][x] == -1) {
+                if (RGB[i][pos] == -1) {
                     whiteCount++;
                 }
             }else {
-                if (RGB[x][i] == -1) {
+                if (RGB[pos][i] == -1) {
                     whiteCount++;
                 }
             }
@@ -33,12 +41,12 @@ public class PicUtil {
         return whiteCount;
     }
 
-    public static int[][] setColor(int[][] RGB, int x, int length, int RGBColor, boolean isVertical){
+    public static int[][] setColor(int[][] RGB, int pos, int length, int RGBColor, boolean isVertical){
         for (int i = 0; i < length; i++) {
             if (isVertical){
-                RGB[i][x] = RGBColor;
+                RGB[i][pos] = RGBColor;
             }else {
-                RGB[x][i] = RGBColor;
+                RGB[pos][i] = RGBColor;
             }
         }
         return RGB;

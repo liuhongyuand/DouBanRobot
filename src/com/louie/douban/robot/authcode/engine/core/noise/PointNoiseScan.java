@@ -21,6 +21,7 @@ import static com.louie.douban.util.Parameters.nearby;
  */
 public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcessService {
 
+    public static boolean useLineScan = true;
     private static final Logger LOGGER = LoggerFactory.getLogger(PointNoiseScan.class);
 
     @Override
@@ -31,7 +32,9 @@ public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcess
             newRGB = denoising(srcRGB, newRGB);
             srcRGB = newRGB;
         }
-        newRGB = lineScanService.getImageWithoutNoise(newRGB, colorProcessService);
+        if (useLineScan) {
+            newRGB = lineScanService.getImageWithoutNoise(newRGB, colorProcessService);
+        }
         return newRGB;
     }
 

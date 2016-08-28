@@ -4,6 +4,7 @@ import com.louie.douban.robot.authcode.engine.AuthCodeProcess;
 import com.louie.douban.robot.authcode.engine.core.AbstractPicProcess;
 import com.louie.douban.robot.authcode.engine.core.CodeImportImpl;
 import com.louie.douban.robot.authcode.engine.core.CodeProcessImpl;
+import com.louie.douban.robot.authcode.engine.core.utils.PicUtil;
 import com.louie.douban.util.Parameters;
 import com.louie.douban.util.PointMap;
 
@@ -19,6 +20,10 @@ import java.util.Set;
 public class CodeIdentify {
 
     private static String[] strings;
+
+    private void outputRGB(String FILE){
+        PicUtil.getRGBFromImageFile(FILE);
+    }
 
     private void codeView(final String FILE){
         CodeImportImpl.isDivide = false;
@@ -87,8 +92,9 @@ public class CodeIdentify {
 
     public static void main(String[] args){
         strings = new String[]{"", "", "t", "e", "", "", "", "", "", "", "", "", "", ""};
-        final String FILE = Parameters.PATH + "/training/a62c8c70-970a-4a4d-875c-dd23e6b83428.jpg";
-        final String resources = Parameters.PATH + "/resources/captcha4.jpg";
+        final String FILE = Parameters.PATH + "/training/121a90fb-3f60-4859-94de-aa5b5d71bb0a.jpg";
+        final String resources = Parameters.PATH + "/resources/captcha3.jpg";
+//        new CodeIdentify().outputRGB(resources);
         new CodeIdentify().codeView(resources);
 //        new CodeIdentify().trainingPicIdentify(resources, false);
 //        new CodeIdentify().getCode(resources);
