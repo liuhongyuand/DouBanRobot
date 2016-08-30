@@ -5,7 +5,7 @@ package com.louie.douban.robot.authcode.engine.core.cut.v2.utils;
  */
 public class ScanUtil {
 
-    public static int blackPointCollertor(int[][] srcRGB, int pos, boolean posIsWidth){
+    public static int blackPointCollector(int[][] srcRGB, int pos, boolean posIsWidth){
         int blackCounts = 0;
         for (int i = 0; i < (posIsWidth ? srcRGB[0].length : srcRGB.length); i++) {
             if (posIsWidth && srcRGB[pos][i] != -1){

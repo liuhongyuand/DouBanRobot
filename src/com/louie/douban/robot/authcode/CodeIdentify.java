@@ -4,6 +4,7 @@ import com.louie.douban.robot.authcode.engine.AuthCodeProcess;
 import com.louie.douban.robot.authcode.engine.core.AbstractPicProcess;
 import com.louie.douban.robot.authcode.engine.core.CodeImportImpl;
 import com.louie.douban.robot.authcode.engine.core.CodeProcessImpl;
+import com.louie.douban.robot.authcode.engine.core.cut.v2.DivideProcess;
 import com.louie.douban.robot.authcode.engine.core.utils.PicUtil;
 import com.louie.douban.util.Parameters;
 import com.louie.douban.util.PointMap;
@@ -34,7 +35,7 @@ public class CodeIdentify {
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Object[] results = process.process(FILE);
-        int[][] imageRGB = (int[][]) results[0];
+        int[][] imageRGB = DivideProcess.forTestDivide((int[][]) results[0]);
         BufferedImage image = new BufferedImage(imageRGB.length, imageRGB[0].length, BufferedImage.TYPE_INT_RGB);
         image = AbstractPicProcess.setBufferedImage(image, imageRGB);
         JLabel label = new JLabel(new ImageIcon(image));
