@@ -28,10 +28,10 @@ public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcess
     public int[][] getImageWithoutNoise(int[][] srcRGB, ColorProcessService colorProcessService) {
         NoiseProcessService lineScanService = new LineNoiseScan();
         int[][] newRGB = colorProcessService.processColor(srcRGB);
-        for (int i = 0; i < 2; i++) {
-            newRGB = denoising(srcRGB, newRGB);
-            srcRGB = newRGB;
-        }
+//        for (int i = 0; i < 2; i++) {
+//            newRGB = denoising(srcRGB, newRGB);
+//            srcRGB = newRGB;
+//        }
         if (useLineScan) {
             newRGB = lineScanService.getImageWithoutNoise(newRGB, colorProcessService);
         }

@@ -6,6 +6,7 @@ import com.louie.douban.robot.authcode.engine.core.color.BinaryValue;
 import com.louie.douban.robot.authcode.engine.core.color.ColorProcessService;
 import com.louie.douban.robot.authcode.engine.core.cut.CharCutService;
 import com.louie.douban.robot.authcode.engine.core.cut.v1.LineScan;
+import com.louie.douban.robot.authcode.engine.core.cut.v2.DivideProcess;
 import com.louie.douban.robot.authcode.engine.core.noise.NoiseProcessService;
 import com.louie.douban.robot.authcode.engine.core.noise.PointNoiseScan;
 import org.slf4j.Logger;
@@ -31,12 +32,11 @@ public class CodeImportImpl extends AbstractPicProcess implements AuthCodeProces
         final List<List<Point>> letterPointList = new LinkedList<>();
         ColorProcessService colorProcessService = new BinaryValue();
         NoiseProcessService noiseProcessService = new PointNoiseScan();
-        CharCutService charCutService = new LineScan();
+        CharCutService charCutService = new DivideProcess();
         int[][] newRGB = noiseProcessService.getImageWithoutNoise(image, colorProcessService);
         if (isDivide) {
-            final Set<Letter> letterSet = charCutService.divideToLetters(newRGB);
-            letterSet.forEach((letter -> {
-                BufferedImage bufferImg = new BufferedImage(letter.getWidth(), letter.getHeight(), BufferedImage.TYPE_INT_BGR);
+            charCutService.divideToLetters(newRGB).forEach((letter -> {
+                BufferedImage bufferImg = new BufferedImage(letter.getLetterRGB().length, letter.getLetterRGB()[0].length, BufferedImage.TYPE_INT_BGR);
                 List<Point> points = new LinkedList<>();
                 for (int i = 0; i < letter.getWidth(); i++) {
                     for (int j = 0; j < letter.getHeight(); j++) {

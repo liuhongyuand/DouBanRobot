@@ -1,5 +1,6 @@
 package com.louie.douban.robot.authcode.engine.core.cut.v2;
 
+import com.louie.douban.model.Letter;
 import com.louie.douban.robot.authcode.engine.core.cut.v2.utils.ScanUtil;
 
 /**
@@ -21,14 +22,18 @@ public class LeftScan {
         return newRGB;
     }
 
-    public static void letterScan(int[][] srcRGB, int startWidth){
-        int[][] newRGB = srcRGB;
-        int widthRight = startWidth + 1;
-        if (widthRight < srcRGB.length){
-            int blackPointCountNow = ScanUtil.blackPointCollector(srcRGB, startWidth, true);
-            int blackPointCountRight = ScanUtil.blackPointCollector(srcRGB, widthRight, true);
-            //// TODO: 2016/8/30 根据每个图横向像素个数来判断字母的间隔。
+    public static Letter letterScan(Letter letter, int endWidth){
+        int[][] newRGB = letter.getOriginalPicRBG();
+        int widthRight = endWidth + 1;
+        if (widthRight < newRGB.length){
+            int blackPointCountRight = ScanUtil.blackPointCollector(newRGB, widthRight, true);
+            if (blackPointCountRight > 0){
+                newRGB = ScanUtil.setArrays(newRGB, 0, 0, widthRight, newRGB[0].length);
+                letter.setLetterRGB(newRGB);
+                return letterScan(letter, widthRight);
+            }
         }
+        return letter;
     }
 
 }

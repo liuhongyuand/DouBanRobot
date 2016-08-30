@@ -19,6 +19,10 @@ public class Letter {
     private int[][] originalPicRBG;
     private BoundaryLine<Integer, Integer> boundaryLine;
 
+    public Letter(int[][] originalPicRBG){
+        this.originalPicRBG = originalPicRBG;
+    }
+
     public Letter(int[][] originalPicRBG, int[][] letterRGB, int StartX, int EndX){
         this.originalPicRBG = originalPicRBG;
         this.letterRGB = letterRGB;
@@ -43,6 +47,7 @@ public class Letter {
 
     public void setLetterRGB(int[][] letterRGB) {
         this.letterRGB = letterRGB;
+        setEndX(letterRGB.length);
     }
 
     public int[][] getOriginalPicRBG() {
