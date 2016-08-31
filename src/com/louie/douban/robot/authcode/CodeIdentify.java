@@ -41,7 +41,7 @@ public class CodeIdentify {
         JLabel label = new JLabel(new ImageIcon(image));
         JLabel labe2 = new JLabel(new ImageIcon(FILE));
         label.setSize(image.getWidth(), image.getHeight());
-        labe2.setBounds(image.getWidth(), 0, image.getWidth(), image.getHeight());
+        labe2.setBounds(image.getWidth(), 0, 250, 70);
         frame.add(label);
         frame.add(labe2);
         frame.setVisible(true);
@@ -94,10 +94,10 @@ public class CodeIdentify {
     public static void main(String[] args){
         strings = new String[]{"", "", "t", "e", "", "", "", "", "", "", "", "", "", ""};
         final String FILE = Parameters.PATH + "/training/121a90fb-3f60-4859-94de-aa5b5d71bb0a.jpg";
-        final String resources = Parameters.PATH + "/resources/captcha.jpg";
+        final String resources = Parameters.PATH + "/resources/captcha4.jpg";
 //        new CodeIdentify().outputRGB(resources);
-//        new CodeIdentify().codeView(FILE);
-        new CodeIdentify().trainingPicIdentify(resources, false);
+//        new CodeIdentify().codeView(resources);
+        new CodeIdentify().trainingPicIdentify(FILE, false);
 //        new CodeIdentify().getCode(resources);
     }
 

@@ -1,9 +1,12 @@
 package com.louie.douban.robot.authcode.engine.core.cut.v2;
 
 import com.louie.douban.model.Letter;
+import com.louie.douban.robot.authcode.engine.core.color.BinaryValue;
 import com.louie.douban.robot.authcode.engine.core.cut.CharCutService;
+import com.louie.douban.robot.authcode.engine.core.cut.v2.utils.ScanUtil;
+import com.louie.douban.robot.authcode.engine.core.noise.PointNoiseScan;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -19,11 +22,11 @@ public class DivideProcess implements CharCutService {
 
     @Override
     public Set<Letter> divideToLetters(int[][] RGB) {
-        Set<Letter> letters = new HashSet<>();
+        Set<Letter> letters = new LinkedHashSet<>();
         int[][] afterLeftScan = LeftScan.leftScan(RGB, 0);
         int[][] afterRightScan = RightScan.rightScan(afterLeftScan, afterLeftScan.length - 1);
         Letter letter = new Letter(afterRightScan);
-        letters.add(LeftScan.letterScan(letter, 0));
+        letters.add(ScanUtil.removeAdditionWhite(LeftScan.letterScan(letter, 0)));
         int endWidth = letter.getEndX();
         int[][] srcRGB = afterRightScan;
         for (int times = 0; times < 15; times++) {
@@ -31,7 +34,7 @@ public class DivideProcess implements CharCutService {
             Letter letterExceptFirst = new Letter(letterAfterLeftScan);
             letterExceptFirst = LeftScan.letterScan(letterExceptFirst, 0);
             if (letterExceptFirst.getLetterRGB() != null) {
-                letters.add(letterExceptFirst);
+                letters.add(ScanUtil.removeAdditionWhite(letterExceptFirst));
                 endWidth = letterExceptFirst.getEndX();
                 srcRGB = letterAfterLeftScan;
             } else {

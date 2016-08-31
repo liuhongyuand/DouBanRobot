@@ -35,7 +35,7 @@ public class CodeImportImpl extends AbstractPicProcess implements AuthCodeProces
         CharCutService charCutService = new DivideProcess();
         int[][] newRGB = noiseProcessService.getImageWithoutNoise(image, colorProcessService);
         if (isDivide) {
-            charCutService.divideToLetters(newRGB).forEach((letter -> {
+            for (Letter letter : charCutService.divideToLetters(newRGB)){
                 BufferedImage bufferImg = new BufferedImage(letter.getLetterRGB().length, letter.getLetterRGB()[0].length, BufferedImage.TYPE_INT_BGR);
                 List<Point> points = new LinkedList<>();
                 for (int i = 0; i < letter.getWidth(); i++) {
@@ -47,7 +47,7 @@ public class CodeImportImpl extends AbstractPicProcess implements AuthCodeProces
                 }
                 letterPointList.add(points);
                 bufferedImages.add(setBufferedImage(bufferImg, letter.getLetterRGB()));
-            }));
+            }
             return new Object[]{letterPointList, bufferedImages};
         } else {
             return new Object[]{newRGB};

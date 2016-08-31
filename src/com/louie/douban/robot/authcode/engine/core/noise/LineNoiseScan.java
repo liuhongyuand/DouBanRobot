@@ -15,7 +15,7 @@ public class LineNoiseScan extends AbstractNoiseProcess implements NoiseProcessS
     @Override
     public int[][] getImageWithoutNoise(int[][] srcRGB, ColorProcessService colorProcessService) {
         NoiseProcessService noiseProcessService = new MatrixNoiseScan();
-        int[][] newRGB = colorProcessService.processColor(srcRGB);
+        int[][] newRGB = srcRGB;//colorProcessService.processColor(srcRGB);
         for (int i = 0; i < 3; i++) {
             for (int width = 0; width < newRGB.length; width++) {
                 double whitePointCount = PicUtil.getWhitePointCount(newRGB, width, newRGB[0].length, false);

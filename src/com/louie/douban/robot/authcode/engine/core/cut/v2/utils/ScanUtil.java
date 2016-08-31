@@ -1,5 +1,9 @@
 package com.louie.douban.robot.authcode.engine.core.cut.v2.utils;
 
+import com.louie.douban.model.Letter;
+import com.louie.douban.robot.authcode.engine.core.cut.v2.AboveScan;
+import com.louie.douban.robot.authcode.engine.core.cut.v2.BelowScan;
+
 /**
  * Created by liuhongyu.louie on 2016/8/28.
  */
@@ -25,6 +29,10 @@ public class ScanUtil {
             }
         }
         return newRGB;
+    }
+
+    public static Letter removeAdditionWhite(Letter letter){
+        return BelowScan.belowScan(AboveScan.aboveScan(letter, 0), letter.getLetterRGB()[0].length);
     }
 
 }
