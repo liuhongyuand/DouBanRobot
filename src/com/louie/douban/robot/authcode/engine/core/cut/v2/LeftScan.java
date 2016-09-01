@@ -26,8 +26,9 @@ public class LeftScan {
         int[][] newRGB = letter.getOriginalPicRBG();
         int widthRight = endWidth + 1;
         if (widthRight < newRGB.length){
-            int blackPointCountRight = ScanUtil.blackPointCollector(newRGB, widthRight, true);
-            if (blackPointCountRight > 0){
+            double blackPointCountRight = ScanUtil.blackPointCollector(newRGB, widthRight, true);
+            //TODO: 字符拆分前做连接判断，防止单个字母被拆开
+            if (widthRight < 15 || (blackPointCountRight / (double) newRGB[0].length > 0.03)){
                 newRGB = ScanUtil.setArrays(newRGB, 0, 0, widthRight, newRGB[0].length);
                 letter.setLetterRGB(newRGB);
                 return letterScan(letter, widthRight);

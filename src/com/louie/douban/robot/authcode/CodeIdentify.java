@@ -93,7 +93,7 @@ public class CodeIdentify {
 
     public static void main(String[] args){
         strings = new String[]{"", "", "t", "e", "", "", "", "", "", "", "", "", "", ""};
-        final String FILE = Parameters.PATH + "/training/121a90fb-3f60-4859-94de-aa5b5d71bb0a.jpg";
+        final String FILE = Parameters.PATH + "/training/2fc9f004-6be8-4668-84a7-227a215e26eb.jpg";
         final String resources = Parameters.PATH + "/resources/captcha4.jpg";
 //        new CodeIdentify().outputRGB(resources);
 //        new CodeIdentify().codeView(resources);
