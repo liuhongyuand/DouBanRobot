@@ -2,7 +2,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.louie.douban.robot</groupId>
     <artifactId>DouBanRobot</artifactId>
+    <packaging>pom</packaging>
     <version>1</version>
+    <modules>
+        <module>authcode</module>
+        <module>douban</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>

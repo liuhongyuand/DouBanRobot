@@ -22,10 +22,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="DouBanRobot" />
+        <module name="AuthCode" />
+        <module name="douban" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="AuthCode" target="1.8" />
+      <module name="douban" target="1.8" />
       <module name="DouBanRobot" target="1.8" />
     </bytecodeTargetLevel>
   </component>
