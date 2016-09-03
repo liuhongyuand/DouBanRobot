@@ -4,6 +4,7 @@ import com.louie.authcode.engine.core.cut.CharCutService;
 import com.louie.authcode.engine.core.cut.v2.utils.ScanUtil;
 import com.louie.authcode.engine.model.Letter;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -32,16 +33,35 @@ public class DivideProcess implements CharCutService {
             Letter letterExceptFirst = new Letter(letterAfterLeftScan);
             letterExceptFirst = LeftScan.letterScan(letterExceptFirst, 0);
             if (letterExceptFirst.getLetterRGB() != null) {
-                letters.add(ScanUtil.removeAdditionWhite(letterExceptFirst));
+                if (letterExceptFirst.getEndX() > 5) {
+                    letters.add(ScanUtil.removeAdditionWhite(letterExceptFirst));
+                }
                 endWidth = letterExceptFirst.getEndX();
                 srcRGB = letterAfterLeftScan;
             } else {
                 break;
             }
-            if (afterRightScan.length - endWidth <= 1){
+            if (letterAfterLeftScan.length - endWidth <= 1){
                 break;
             }
         }
-        return letters;
+        return getUsefulLetter(letters);
+    }
+
+    private LinkedHashSet<Letter> getUsefulLetter(Set<Letter> letters){
+        final Set<Letter> NEW_LETTERS = new LinkedHashSet<>();
+        letters.forEach((letter -> {
+            if (isValidLetter(letter)){
+                NEW_LETTERS.add(letter);
+            }
+        }));
+        return (LinkedHashSet<Letter>) NEW_LETTERS;
+    }
+
+    private boolean isValidLetter(Letter letter){
+        if (letter.getLetterRGB().length > 13 && letter.getLetterRGB()[0].length > 13){
+            return true;
+        }
+        return true;
     }
 }

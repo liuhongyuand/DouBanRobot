@@ -95,10 +95,10 @@ public class CodeIdentify {
     public static void main(String[] args){
         strings = new String[]{"", "", "t", "e", "", "", "", "", "", "", "", "", "", ""};
         final String FILE = PROJECT_ROOT + "/training/2fc9f004-6be8-4668-84a7-227a215e26eb.jpg";
-        final String resources = PROJECT_ROOT + "/resources/captcha4.jpg";
+        final String resources = PROJECT_ROOT + "/resources/captcha3.jpg";
 //        new CodeIdentify().outputRGB(resources);
 //        new CodeIdentify().codeView(resources);
-        new CodeIdentify().trainingPicIdentify(FILE, false);
+        new CodeIdentify().trainingPicIdentify(resources, false);
 //        new CodeIdentify().getCode(resources);
     }
 

@@ -14,8 +14,8 @@ public class LeftScan {
         if (widthRight < srcRGB.length) {
             int blackPointCountNow = ScanUtil.blackPointCollector(srcRGB, startWidth, true);
             int blackPointCountRight = ScanUtil.blackPointCollector(srcRGB, widthRight, true);
+            newRGB = ScanUtil.setArrays(srcRGB, widthRight, 0, srcRGB.length, srcRGB[0].length);
             if (blackPointCountRight <= blackPointCountNow){
-                newRGB = ScanUtil.setArrays(srcRGB, widthRight, 0, srcRGB.length, srcRGB[0].length);
                 return leftScan(newRGB, 0);
             }
         }
@@ -27,12 +27,15 @@ public class LeftScan {
         int widthRight = endWidth + 1;
         if (widthRight < newRGB.length){
             double blackPointCountRight = ScanUtil.blackPointCollector(newRGB, widthRight, true);
-            //TODO: 字符拆分前做连接判断，防止单个字母被拆开
-            if (!(widthRight > 15 && !ScanUtil.isContinuouslyBlackPoint(newRGB, widthRight) && (blackPointCountRight / (double) newRGB[0].length < 0.19))){
+            if (!(widthRight > 13 && !ScanUtil.isContinuouslyBlackPoint(newRGB, widthRight) && (blackPointCountRight / (double) newRGB[0].length < 0.10))){
+//            if (blackPointCountRight > 0){
                 newRGB = ScanUtil.setArrays(newRGB, 0, 0, widthRight, newRGB[0].length);
                 letter.setLetterRGB(newRGB);
                 return letterScan(letter, widthRight);
             }
+        } else {
+            newRGB = ScanUtil.setArrays(newRGB, 0, 0, newRGB.length, newRGB[0].length);
+            letter.setLetterRGB(newRGB);
         }
         return letter;
     }

@@ -51,7 +51,7 @@ public class ScanUtilTest {
 
     @Test
     public void testContinuouslyWhitePoint(){
-        Assert.assertEquals(true, ScanUtil.isContinuouslyBlackPoint(TEST_IMAGE, 2));
+        Assert.assertEquals(false, ScanUtil.isContinuouslyBlackPoint(TEST_IMAGE, 2));
     }
 
 }

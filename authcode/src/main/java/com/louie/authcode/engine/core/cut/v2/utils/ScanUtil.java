@@ -4,7 +4,12 @@ import com.louie.authcode.engine.core.cut.v2.AboveScan;
 import com.louie.authcode.engine.core.cut.v2.BelowScan;
 import com.louie.authcode.engine.core.cut.v2.LeftScan;
 import com.louie.authcode.engine.core.cut.v2.RightScan;
+import com.louie.authcode.engine.core.noise.MatrixNoiseScan;
+import com.louie.authcode.engine.core.noise.NoiseProcessService;
 import com.louie.authcode.engine.model.Letter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by liuhongyu.louie on 2016/8/28.
@@ -71,19 +76,24 @@ public class ScanUtil {
     }
 
     public static boolean isContinuouslyBlackPoint(int[][] srcRGB, int width){
+        boolean isLeftAllWhite = true;
+        boolean isRightAllWhite = true;
+        boolean isInLetter = false;
         boolean blackPointIsStart = false;
         boolean blackPointIsEnd = false;
+        Set<Integer> blackHeight = new HashSet<>();
         for (int height = 0; height < srcRGB[0].length; height++) {
             if (!blackPointIsStart){
                 if (srcRGB[width][height] != -1){
+                    blackHeight.add(height);
                     blackPointIsStart = true;
-                    continue;
                 }
             }
             if (blackPointIsStart && !blackPointIsEnd){
                 if (srcRGB[width][height] == -1){
                     blackPointIsEnd = true;
-                    continue;
+                } else {
+                    blackHeight.add(height);
                 }
             }
             if (blackPointIsStart && blackPointIsEnd) {
@@ -92,11 +102,54 @@ public class ScanUtil {
                 }
             }
         }
-        return true;
+        if (width > 0 && width < srcRGB.length - 1) {
+            for (int height = 0; height < srcRGB[0].length; height++) {
+                if ((srcRGB[width + 1][height] != -1 && srcRGB[width - 1][height] != -1)){
+                    if (blackHeight.contains(height)) {
+                        isInLetter = true;
+                    }
+                }
+                if (height == 0){
+                    if ((srcRGB[width + 1][height] != -1 || srcRGB[width + 1][height + 1] != -1) && (srcRGB[width - 1][height] != -1 || srcRGB[width - 1][height + 1] != -1)){
+                        if (blackHeight.contains(height) || blackHeight.contains(height + 1)){
+                            isInLetter = true;
+                        }
+                    }
+                }
+                if (height > 1 && height < srcRGB[0].length - 1){
+                    if ((srcRGB[width + 1][height - 1] != -1 || srcRGB[width + 1][height - 1] != -1) && (srcRGB[width - 1][height + 1] != -1 || srcRGB[width - 1][height - 1] != -1)){
+                        if (blackHeight.contains(height - 1) || blackHeight.contains(height) || blackHeight.contains(height + 1)){
+                            isInLetter = true;
+                        }
+                    }
+                }
+                if (height == srcRGB[0].length){
+                    if ((srcRGB[width + 1][height - 1] != -1 || srcRGB[width + 1][height] != -1) && (srcRGB[width - 1][height - 1] != -1 || srcRGB[width - 1][height] != -1)){
+                        if (blackHeight.contains(height) || blackHeight.contains(height - 1)){
+                            isInLetter = true;
+                        }
+                    }
+                }
+                if (srcRGB[width - 1][height] != -1){
+                    isLeftAllWhite = false;
+                }
+                if (srcRGB[width + 1][height] != -1){
+                    isRightAllWhite = false;
+                }
+            }
+            if (isLeftAllWhite || isRightAllWhite){
+                isInLetter = true;
+            }
+            return blackPointIsEnd && isInLetter;
+        }
+        return blackPointIsEnd;
     }
 
     public static Letter removeAdditionWhite(Letter letter){
-        return BelowScan.belowScan(AboveScan.aboveScan(letter, 0), letter.getLetterRGB()[0].length);
+        NoiseProcessService noiseProcess = new MatrixNoiseScan();
+        Letter newLetter = new Letter(letter.getOriginalPicRBG());
+        newLetter.setLetterRGB(noiseProcess.getImageWithoutNoise(BelowScan.belowScan(AboveScan.aboveScan(letter, 0), letter.getLetterRGB()[0].length).getLetterRGB(), null));
+        return newLetter;
     }
 
 }
