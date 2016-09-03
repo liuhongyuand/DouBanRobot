@@ -2,13 +2,14 @@ package com.louie.authcode.engine.core.cut.v1;
 
 import com.louie.authcode.engine.core.cut.CharCutService;
 import com.louie.authcode.engine.core.utils.PicUtil;
-import com.louie.douban.model.Letter;
-import com.louie.douban.util.Type;
+import com.louie.authcode.engine.model.Letter;
+import com.louie.authcode.engine.core.utils.Type;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static com.louie.douban.util.Parameters.*;
+import static com.louie.authcode.engine.EngineParameters.*;
+
 
 /**
  * Use v2 to replace this divide service

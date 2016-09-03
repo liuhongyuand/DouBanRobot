@@ -4,7 +4,7 @@ import com.louie.authcode.engine.core.cut.v2.AboveScan;
 import com.louie.authcode.engine.core.cut.v2.BelowScan;
 import com.louie.authcode.engine.core.cut.v2.LeftScan;
 import com.louie.authcode.engine.core.cut.v2.RightScan;
-import com.louie.douban.model.Letter;
+import com.louie.authcode.engine.model.Letter;
 
 /**
  * Created by liuhongyu.louie on 2016/8/28.

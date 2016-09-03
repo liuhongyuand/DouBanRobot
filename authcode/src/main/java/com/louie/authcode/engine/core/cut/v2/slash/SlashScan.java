@@ -1,7 +1,7 @@
 package com.louie.authcode.engine.core.cut.v2.slash;
 
 import com.louie.authcode.engine.core.cut.v2.utils.ScanUtil;
-import com.louie.douban.model.Letter;
+import com.louie.authcode.engine.model.Letter;
 
 /**
  * Created by liuhongyu.louie on 2016/9/1.

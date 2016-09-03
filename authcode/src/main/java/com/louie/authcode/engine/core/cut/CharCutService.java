@@ -1,6 +1,6 @@
 package com.louie.authcode.engine.core.cut;
 
-import com.louie.douban.model.Letter;
+import com.louie.authcode.engine.model.Letter;
 
 import java.util.Set;
 

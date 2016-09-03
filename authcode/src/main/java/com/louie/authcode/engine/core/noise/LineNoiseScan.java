@@ -2,9 +2,10 @@ package com.louie.authcode.engine.core.noise;
 
 import com.louie.authcode.engine.core.color.ColorProcessService;
 import com.louie.authcode.engine.core.utils.PicUtil;
-import com.louie.douban.util.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.louie.authcode.engine.EngineParameters.similarity;
 
 /**
  * Created by liuhongyu.louie on 2016/8/26.
@@ -19,13 +20,13 @@ public class LineNoiseScan extends AbstractNoiseProcess implements NoiseProcessS
         for (int i = 0; i < 3; i++) {
             for (int width = 0; width < newRGB.length; width++) {
                 double whitePointCount = PicUtil.getWhitePointCount(newRGB, width, newRGB[0].length, false);
-                if (whitePointCount / (double) newRGB[0].length > Parameters.similarity + 0.39999 || whitePointCount / (double) newRGB[0].length < 0.02) {
+                if (whitePointCount / (double) newRGB[0].length > similarity + 0.39999 || whitePointCount / (double) newRGB[0].length < 0.02) {
                     newRGB = PicUtil.setColor(newRGB, width, newRGB[0].length, -1, false);
                 }
             }
             for (int height = 0; height < newRGB[0].length; height++) {
                 double whitePointCount = PicUtil.getWhitePointCount(newRGB, height, newRGB.length, true);
-                if (whitePointCount / (double) newRGB.length > Parameters.similarity + 0.39999 || whitePointCount / (double) newRGB.length < 0.02 ) {
+                if (whitePointCount / (double) newRGB.length > similarity + 0.39999 || whitePointCount / (double) newRGB.length < 0.02 ) {
                     newRGB = PicUtil.setColor(newRGB, height, newRGB.length, -1, true);
                 }
             }

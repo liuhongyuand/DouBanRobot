@@ -6,14 +6,15 @@ import com.louie.authcode.engine.core.CodeImportImpl;
 import com.louie.authcode.engine.core.CodeProcessImpl;
 import com.louie.authcode.engine.core.cut.v2.DivideProcess;
 import com.louie.authcode.engine.core.utils.PicUtil;
-import com.louie.douban.util.Parameters;
-import com.louie.douban.util.PointMap;
+import com.louie.authcode.engine.brain.PointMap;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Set;
+
+import static com.louie.authcode.engine.EngineParameters.*;
 
 /**
  * Created by liuhongyu.louie on 2016/8/21.
@@ -86,15 +87,15 @@ public class CodeIdentify {
         List<?> letters = (List<?>) results[0];
         for (Object letterObj : letters) {
             List<Point> letterList = (List<Point>) letterObj;
-            System.out.print(PointMap.getLetter(letterList, Parameters.deviation, Parameters.similarity));
+            System.out.print(PointMap.getLetter(letterList, deviation, similarity));
         }
         System.out.println();
     }
 
     public static void main(String[] args){
         strings = new String[]{"", "", "t", "e", "", "", "", "", "", "", "", "", "", ""};
-        final String FILE = Parameters.PATH + "/training/2fc9f004-6be8-4668-84a7-227a215e26eb.jpg";
-        final String resources = Parameters.PATH + "/resources/captcha4.jpg";
+        final String FILE = PROJECT_ROOT + "/training/2fc9f004-6be8-4668-84a7-227a215e26eb.jpg";
+        final String resources = PROJECT_ROOT + "/resources/captcha4.jpg";
 //        new CodeIdentify().outputRGB(resources);
 //        new CodeIdentify().codeView(resources);
         new CodeIdentify().trainingPicIdentify(FILE, false);

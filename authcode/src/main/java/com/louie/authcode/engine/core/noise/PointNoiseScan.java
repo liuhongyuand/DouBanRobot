@@ -1,21 +1,17 @@
 package com.louie.authcode.engine.core.noise;
 
 import com.louie.authcode.engine.core.color.ColorProcessService;
-import com.louie.authcode.engine.core.noise.AbstractNoiseProcess;
 import com.louie.authcode.engine.core.utils.PicUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import static com.louie.douban.util.Parameters.difRate;
-import static com.louie.douban.util.Parameters.nearby;
+import static com.louie.authcode.engine.EngineParameters.difRate;
+import static com.louie.authcode.engine.EngineParameters.nearby;
+
 
 /**
  * Created by liuhongyu.louie on 2016/8/23.

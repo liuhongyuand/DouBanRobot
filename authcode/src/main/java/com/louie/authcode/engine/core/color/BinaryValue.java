@@ -1,7 +1,7 @@
 package com.louie.authcode.engine.core.color;
 
-import static com.louie.douban.util.Parameters.difRate;
-import static com.louie.douban.util.Parameters.target;
+import static com.louie.authcode.engine.EngineParameters.difRate;
+import static com.louie.authcode.engine.EngineParameters.target;
 
 /**
  * Created by liuhongyu.louie on 2016/8/23.

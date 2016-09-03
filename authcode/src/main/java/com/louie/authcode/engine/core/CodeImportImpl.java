@@ -7,7 +7,7 @@ import com.louie.authcode.engine.core.cut.CharCutService;
 import com.louie.authcode.engine.core.cut.v2.DivideProcess;
 import com.louie.authcode.engine.core.noise.NoiseProcessService;
 import com.louie.authcode.engine.core.noise.PointNoiseScan;
-import com.louie.douban.model.Letter;
+import com.louie.authcode.engine.model.Letter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -2,7 +2,7 @@ package com.louie.authcode.engine.core.cut.v2;
 
 import com.louie.authcode.engine.core.cut.CharCutService;
 import com.louie.authcode.engine.core.cut.v2.utils.ScanUtil;
-import com.louie.douban.model.Letter;
+import com.louie.authcode.engine.model.Letter;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
