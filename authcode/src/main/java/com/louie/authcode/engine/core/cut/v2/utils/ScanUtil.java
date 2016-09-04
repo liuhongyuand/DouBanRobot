@@ -6,6 +6,7 @@ import com.louie.authcode.engine.core.cut.v2.LeftScan;
 import com.louie.authcode.engine.core.cut.v2.RightScan;
 import com.louie.authcode.engine.core.noise.MatrixNoiseScan;
 import com.louie.authcode.engine.core.noise.NoiseProcessService;
+import com.louie.authcode.engine.core.noise.PointNoiseScan;
 import com.louie.authcode.engine.model.Letter;
 
 import java.util.HashSet;
@@ -146,10 +147,8 @@ public class ScanUtil {
     }
 
     public static Letter removeAdditionWhite(Letter letter){
-        NoiseProcessService noiseProcess = new MatrixNoiseScan();
-        Letter newLetter = new Letter(letter.getOriginalPicRBG());
-        newLetter.setLetterRGB(noiseProcess.getImageWithoutNoise(BelowScan.belowScan(AboveScan.aboveScan(letter, 0), letter.getLetterRGB()[0].length).getLetterRGB(), null));
-        return newLetter;
+        letter.setLetterRGB(PointNoiseScan.doDenoising(letter.getLetterRGB(), letter.getLetterRGB(), letter.getLetterRGB().length, letter.getLetterRGB()[0].length));
+        return BelowScan.belowScan(AboveScan.aboveScan(letter, 0), letter.getLetterRGB()[0].length);
     }
 
 }

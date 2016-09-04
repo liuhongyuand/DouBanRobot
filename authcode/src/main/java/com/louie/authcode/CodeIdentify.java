@@ -94,11 +94,11 @@ public class CodeIdentify {
 
     public static void main(String[] args){
         strings = new String[]{"", "", "t", "e", "", "", "", "", "", "", "", "", "", ""};
-        final String FILE = PROJECT_ROOT + "/training/2fc9f004-6be8-4668-84a7-227a215e26eb.jpg";
-        final String resources = PROJECT_ROOT + "/resources/captcha3.jpg";
+        final String FILE = PROJECT_ROOT + "/training/368b1076-14c0-4ce2-a520-6c3f5de19fdc.jpg";
+        final String resources = PROJECT_ROOT + "/resources/captcha2.jpg";
 //        new CodeIdentify().outputRGB(resources);
 //        new CodeIdentify().codeView(resources);
-        new CodeIdentify().trainingPicIdentify(resources, false);
+        new CodeIdentify().trainingPicIdentify(FILE, false);
 //        new CodeIdentify().getCode(resources);
     }
 

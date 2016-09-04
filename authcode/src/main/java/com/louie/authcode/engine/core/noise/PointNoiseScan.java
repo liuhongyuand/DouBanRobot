@@ -24,7 +24,10 @@ public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcess
     @Override
     public int[][] getImageWithoutNoise(int[][] srcRGB, ColorProcessService colorProcessService) {
         NoiseProcessService lineScanService = new LineNoiseScan();
-        int[][] newRGB = colorProcessService.processColor(srcRGB);
+        int[][] newRGB = srcRGB;
+        if (colorProcessService != null) {
+             newRGB = colorProcessService.processColor(srcRGB);
+        }
 //        for (int i = 0; i < 2; i++) {
 //            newRGB = denoising(srcRGB, newRGB);
 //            srcRGB = newRGB;
@@ -45,7 +48,7 @@ public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcess
         return newRGB;
     }
 
-    private int[][] doDenoising(int[][] srcRGB, int[][] newRGB, int width, int height){
+    public static int[][] doDenoising(int[][] srcRGB, int[][] newRGB, int width, int height){
         for (int i = 0; i < width; i++){
             for (int j = 0; j < height; j++){
                 for (int position = 1; position <= nearby; position++) {
@@ -58,7 +61,7 @@ public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcess
         return newRGB;
     }
 
-    private boolean differRate(int[][] srcRGB, int x, int y, int width, int height, int position) {
+    private static boolean differRate(int[][] srcRGB, int x, int y, int width, int height, int position) {
         int StartPointRGB = srcRGB[x][y];
         final int[] isDiff = {0};
         int up, down, left, right, leftUp, leftDown, rightUp, rightDown;
