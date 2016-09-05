@@ -76,17 +76,23 @@ public class ScanUtil {
         return newRGB;
     }
 
+    @Deprecated
+    /**
+     * Replaced by {@link ScanUtil.isNeedDivide(int[][] srcRGB, int width)};
+     */
     public static boolean isContinuouslyBlackPoint(int[][] srcRGB, int width){
         boolean isLeftAllWhite = true;
         boolean isRightAllWhite = true;
         boolean isInLetter = false;
+        boolean isOtherBlackPointInLetter = false;
         boolean blackPointIsStart = false;
         boolean blackPointIsEnd = false;
-        Set<Integer> blackHeight = new HashSet<>();
+        Set<Integer> continuouslyBlackHeight = new HashSet<>();
+        Set<Integer> otherBlackHeight = new HashSet<>();
         for (int height = 0; height < srcRGB[0].length; height++) {
             if (!blackPointIsStart){
                 if (srcRGB[width][height] != -1){
-                    blackHeight.add(height);
+                    continuouslyBlackHeight.add(height);
                     blackPointIsStart = true;
                 }
             }
@@ -94,39 +100,40 @@ public class ScanUtil {
                 if (srcRGB[width][height] == -1){
                     blackPointIsEnd = true;
                 } else {
-                    blackHeight.add(height);
+                    continuouslyBlackHeight.add(height);
                 }
             }
             if (blackPointIsStart && blackPointIsEnd) {
                 if (srcRGB[width][height] != -1) {
-                    return false;
+                    otherBlackHeight.add(height);
+                    continuouslyBlackHeight.add(height);
                 }
             }
         }
         if (width > 0 && width < srcRGB.length - 1) {
             for (int height = 0; height < srcRGB[0].length; height++) {
                 if ((srcRGB[width + 1][height] != -1 && srcRGB[width - 1][height] != -1)){
-                    if (blackHeight.contains(height)) {
+                    if (continuouslyBlackHeight.contains(height)) {
                         isInLetter = true;
                     }
                 }
                 if (height == 0){
                     if ((srcRGB[width + 1][height] != -1 || srcRGB[width + 1][height + 1] != -1) && (srcRGB[width - 1][height] != -1 || srcRGB[width - 1][height + 1] != -1)){
-                        if (blackHeight.contains(height) || blackHeight.contains(height + 1)){
+                        if (continuouslyBlackHeight.contains(height) || continuouslyBlackHeight.contains(height + 1)){
                             isInLetter = true;
                         }
                     }
                 }
                 if (height > 1 && height < srcRGB[0].length - 1){
-                    if ((srcRGB[width + 1][height - 1] != -1 || srcRGB[width + 1][height - 1] != -1) && (srcRGB[width - 1][height + 1] != -1 || srcRGB[width - 1][height - 1] != -1)){
-                        if (blackHeight.contains(height - 1) || blackHeight.contains(height) || blackHeight.contains(height + 1)){
+                    if ((srcRGB[width + 1][height + 1] != -1 || srcRGB[width + 1][height - 1] != -1) && (srcRGB[width - 1][height + 1] != -1 || srcRGB[width - 1][height - 1] != -1)){
+                        if (continuouslyBlackHeight.contains(height - 1) || continuouslyBlackHeight.contains(height) || continuouslyBlackHeight.contains(height + 1)){
                             isInLetter = true;
                         }
                     }
                 }
                 if (height == srcRGB[0].length){
                     if ((srcRGB[width + 1][height - 1] != -1 || srcRGB[width + 1][height] != -1) && (srcRGB[width - 1][height - 1] != -1 || srcRGB[width - 1][height] != -1)){
-                        if (blackHeight.contains(height) || blackHeight.contains(height - 1)){
+                        if (continuouslyBlackHeight.contains(height) || continuouslyBlackHeight.contains(height - 1)){
                             isInLetter = true;
                         }
                     }
@@ -137,6 +144,7 @@ public class ScanUtil {
                 if (srcRGB[width + 1][height] != -1){
                     isRightAllWhite = false;
                 }
+//                if (isOtherBlackPointInLetter)
             }
             if (isLeftAllWhite || isRightAllWhite){
                 isInLetter = true;
@@ -144,6 +152,112 @@ public class ScanUtil {
             return blackPointIsEnd && isInLetter;
         }
         return blackPointIsEnd;
+    }
+
+    /**
+     * isNextLineHasNearBlackPoint[] :
+     * 0:is right line has near black point.
+     * 1:is right line has other near black point.
+     * 2:is left line has near black point.
+     * 3:is left line has other near black point.
+     * 4:is right line has continuously black point.
+     * 5:is left line has continuously black point.
+     * 6:is this line has continuously black point.
+     * @param srcRGB
+     * @param width
+     * @return
+     */
+    public static boolean isNeedDivide(int[][] srcRGB, int width){
+        if (width == srcRGB.length){
+            return true;
+        }
+        if (width > srcRGB.length - 2){
+            return true;
+        }
+        int blackPointStart = -1;
+        int blackPointStartLeft = -1;
+        int blackPointStartRight = -1;
+        boolean[] isNextLineHasNearBlackPoint = {false, false, false, false, false, false, false};
+        Set<Integer> continuouslyBlackPointHeight = new HashSet<>();
+        Set<Integer> otherBlackPointHeight = new HashSet<>();
+        Set<Integer> continuouslyBlackPointHeightLeft = new HashSet<>();
+        Set<Integer> otherBlackPointHeightLeft = new HashSet<>();
+        Set<Integer> continuouslyBlackPointHeightRight = new HashSet<>();
+        Set<Integer> otherBlackPointHeightRight = new HashSet<>();
+        for (int height = 0; height < srcRGB[0].length; height++) {
+            blackPointStartLeft = blackPointCollector(srcRGB, width - 1, height, blackPointStartLeft, continuouslyBlackPointHeightLeft, otherBlackPointHeightLeft);
+            blackPointStart = blackPointCollector(srcRGB, width, height, blackPointStart, continuouslyBlackPointHeight, otherBlackPointHeight);
+            blackPointStartRight = blackPointCollector(srcRGB, width + 1, height, blackPointStartRight, continuouslyBlackPointHeightRight, otherBlackPointHeightRight);
+        }
+        if (continuouslyBlackPointHeight.size() == 0){
+            return true;
+        }
+        if (otherBlackPointHeight.size() == 0){
+            isNextLineHasNearBlackPoint[6] = true;
+        }
+        if (otherBlackPointHeightLeft.size() == 0){
+            isNextLineHasNearBlackPoint[5] = true;
+        }
+        if (otherBlackPointHeightLeft.size() == 0){
+            isNextLineHasNearBlackPoint[4] = true;
+        }
+        continuouslyBlackPointHeight.forEach((point) -> {
+            if (hasBlackPointNearby(point, continuouslyBlackPointHeightRight)){
+                isNextLineHasNearBlackPoint[0] = true;
+            }
+            if (hasBlackPointNearby(point, continuouslyBlackPointHeightLeft)){
+                isNextLineHasNearBlackPoint[2] = true;
+            }
+        });
+        otherBlackPointHeight.forEach((point) -> {
+            if (hasBlackPointNearby(point, otherBlackPointHeightRight)){
+                isNextLineHasNearBlackPoint[1] = true;
+            }
+            if (hasBlackPointNearby(point, otherBlackPointHeightLeft)){
+                isNextLineHasNearBlackPoint[3] = true;
+            }
+        });
+//        * 0:is right line has near black point.
+//        * 1:is right line has other near black point.
+//        * 2:is left line has near black point.
+//        * 3:is left line has other near black point.
+//        * 4:is right line has continuously black point.
+//        * 5:is left line has continuously black point.
+//        * 6:is this line has continuously black point.
+        if (isNextLineHasNearBlackPoint[6] && isNextLineHasNearBlackPoint[2]){
+            if (isNextLineHasNearBlackPoint[0]){
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    private static boolean hasBlackPointNearby(int height, Set<Integer> BlackPointHeightRight){
+        boolean[] hasNearPoint = {false};
+        BlackPointHeightRight.forEach((point) -> {
+            if (height == point || height == point + 1 || height == point - 1){
+                hasNearPoint[0] = true;
+            }
+        });
+        return hasNearPoint[0];
+    }
+
+    private static int blackPointCollector(int[][] srcRGB, int width, int height, int lastBlackPointPos, Set<Integer> continuouslyBlackPointHeight, Set<Integer> otherBlackPointHeight){
+        if (srcRGB[width][height] != -1){
+            if (lastBlackPointPos == -1){
+                lastBlackPointPos = height;
+                continuouslyBlackPointHeight.add(height);
+            } else {
+                if (lastBlackPointPos + 1 == height) {
+                    lastBlackPointPos = height;
+                    continuouslyBlackPointHeight.add(height);
+                } else {
+                    otherBlackPointHeight.add(height);
+                }
+            }
+        }
+        return lastBlackPointPos;
     }
 
     public static Letter removeAdditionWhite(Letter letter){
