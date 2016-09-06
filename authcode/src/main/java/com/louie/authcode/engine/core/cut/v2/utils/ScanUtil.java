@@ -8,6 +8,7 @@ import com.louie.authcode.engine.core.noise.MatrixNoiseScan;
 import com.louie.authcode.engine.core.noise.NoiseProcessService;
 import com.louie.authcode.engine.core.noise.PointNoiseScan;
 import com.louie.authcode.engine.model.Letter;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -156,13 +157,17 @@ public class ScanUtil {
 
     /**
      * isNextLineHasNearBlackPoint[] :
-     * 0:is right line has near black point.
-     * 1:is right line has other near black point.
-     * 2:is left line has near black point.
-     * 3:is left line has other near black point.
-     * 4:is right line has continuously black point.
-     * 5:is left line has continuously black point.
-     * 6:is this line has continuously black point.
+     *  0:is right line has near black point.
+     *  1:is right line has other near black point.
+     *  2:is left line has near black point.
+     *  3:is left line has other near black point.
+     *  4:is right line has continuously black point.
+     *  5:is left line has continuously black point.
+     *  6:is this line has continuously black point.
+     *  7:is right line has other black point near this line continuously black point.
+     *  8:is left line has other black point near this line continuously black point.
+     *  9:is right line has continuously black point near this line other black point.
+     * 10:is left line has continuously black point near this line other black point.
      * @param srcRGB
      * @param width
      * @return
@@ -177,7 +182,7 @@ public class ScanUtil {
         int blackPointStart = -1;
         int blackPointStartLeft = -1;
         int blackPointStartRight = -1;
-        boolean[] isNextLineHasNearBlackPoint = {false, false, false, false, false, false, false};
+        boolean[] isNextLineHasNearBlackPoint = {false, false, false, false, false, false, false, false, false, false, false};
         Set<Integer> continuouslyBlackPointHeight = new HashSet<>();
         Set<Integer> otherBlackPointHeight = new HashSet<>();
         Set<Integer> continuouslyBlackPointHeightLeft = new HashSet<>();
@@ -208,6 +213,12 @@ public class ScanUtil {
             if (hasBlackPointNearby(point, continuouslyBlackPointHeightLeft)){
                 isNextLineHasNearBlackPoint[2] = true;
             }
+            if (hasBlackPointNearby(point, otherBlackPointHeightRight)){
+                isNextLineHasNearBlackPoint[7] = true;
+            }
+            if (hasBlackPointNearby(point, otherBlackPointHeightLeft)){
+                isNextLineHasNearBlackPoint[8] = true;
+            }
         });
         otherBlackPointHeight.forEach((point) -> {
             if (hasBlackPointNearby(point, otherBlackPointHeightRight)){
@@ -216,19 +227,59 @@ public class ScanUtil {
             if (hasBlackPointNearby(point, otherBlackPointHeightLeft)){
                 isNextLineHasNearBlackPoint[3] = true;
             }
-        });
-//        * 0:is right line has near black point.
-//        * 1:is right line has other near black point.
-//        * 2:is left line has near black point.
-//        * 3:is left line has other near black point.
-//        * 4:is right line has continuously black point.
-//        * 5:is left line has continuously black point.
-//        * 6:is this line has continuously black point.
-        if (isNextLineHasNearBlackPoint[6] && isNextLineHasNearBlackPoint[2]){
-            if (isNextLineHasNearBlackPoint[0]){
-                return false;
+            if (hasBlackPointNearby(point, continuouslyBlackPointHeightRight)){
+                isNextLineHasNearBlackPoint[9] = true;
             }
-
+            if (hasBlackPointNearby(point, continuouslyBlackPointHeightLeft)){
+                isNextLineHasNearBlackPoint[10] = true;
+            }
+        });
+//        *  0:is right line has near black point.
+//        *  1:is right line has other near black point.
+//        *  2:is left line has near black point.
+//        *  3:is left line has other near black point.
+//        *  4:is right line has continuously black point.
+//        *  5:is left line has continuously black point.
+//        *  6:is this line has continuously black point.
+//        *  7:is right line has other black point near this line continuously black point.
+//        *  8:is left line has other black point near this line continuously black point.
+//        *  9:is right line has continuously black point near this line other black point.
+//        * 10:is left line has continuously black point near this line other black point.
+        if (isNextLineHasNearBlackPoint[5] && isNextLineHasNearBlackPoint[9]){
+            return false;
+        }
+        if((double)continuouslyBlackPointHeight.size()/(double) srcRGB[0].length > 0.35){
+            return false;
+        }
+        if (isNextLineHasNearBlackPoint[5] && isNextLineHasNearBlackPoint[6] && isNextLineHasNearBlackPoint[2] && isNextLineHasNearBlackPoint[0]){
+            return false;
+        }
+        if (isNextLineHasNearBlackPoint[2] && isNextLineHasNearBlackPoint[6] && isNextLineHasNearBlackPoint[0]){
+            return false;
+        }
+        if (isNextLineHasNearBlackPoint[2] && continuouslyBlackPointHeightRight.size() == 0){
+            return false;
+        }
+        if (isNextLineHasNearBlackPoint[6] && isNextLineHasNearBlackPoint[4] && !isNextLineHasNearBlackPoint[0]){
+            return true;
+        }
+        if (isNextLineHasNearBlackPoint[0] && isNextLineHasNearBlackPoint[1] && isNextLineHasNearBlackPoint[2] && isNextLineHasNearBlackPoint[3]){
+            return false;
+        }
+        if (isNextLineHasNearBlackPoint[0] && isNextLineHasNearBlackPoint[2]){
+            return false;
+        }
+        if (isNextLineHasNearBlackPoint[6] && isNextLineHasNearBlackPoint[4] && isNextLineHasNearBlackPoint[0]){
+            return false;
+        }
+        if (isNextLineHasNearBlackPoint[6] && isNextLineHasNearBlackPoint[2]){
+            return false;
+        }
+        if (isNextLineHasNearBlackPoint[6] && isNextLineHasNearBlackPoint[0]){
+            return false;
+        }
+        if (isNextLineHasNearBlackPoint[2] && isNextLineHasNearBlackPoint[1] && isNextLineHasNearBlackPoint[3]){
+            return false;
         }
         return true;
     }
@@ -260,8 +311,28 @@ public class ScanUtil {
         return lastBlackPointPos;
     }
 
+    public static boolean isNeedRemoved(int[][] srcRGB){
+        double whitePointCount = 0.0;
+        if (srcRGB.length < 9 || srcRGB[0].length< 13){
+            return true;
+        }
+        for (int[] aSrcRGB : srcRGB) {
+            for (int height = 0; height < srcRGB[0].length; height++) {
+                if (aSrcRGB[height] == -1) {
+                    whitePointCount++;
+                }
+            }
+        }
+        if (whitePointCount / (double) (srcRGB.length * srcRGB[0].length) < 0.459999){
+            return true;
+        }
+        return false;
+    }
+
     public static Letter removeAdditionWhite(Letter letter){
+        MatrixNoiseScan noiseProcessService = new MatrixNoiseScan();
         letter.setLetterRGB(PointNoiseScan.doDenoising(letter.getLetterRGB(), letter.getLetterRGB(), letter.getLetterRGB().length, letter.getLetterRGB()[0].length));
+        //// TODO: 2016/9/7 matrix scan after letter divided
         return BelowScan.belowScan(AboveScan.aboveScan(letter, 0), letter.getLetterRGB()[0].length);
     }
 

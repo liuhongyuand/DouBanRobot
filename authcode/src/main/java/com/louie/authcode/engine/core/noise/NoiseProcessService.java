@@ -8,8 +8,8 @@ import com.louie.authcode.engine.core.color.ColorProcessService;
  */
 public interface NoiseProcessService {
 
-    int[][] getImageWithoutNoise(int[][] srcRGB, ColorProcessService colorProcessService);
+    int[][] getImageWithoutNoise(int[][] srcRGB, int maxMatrix, ColorProcessService colorProcessService);
 
-    int[][] getImageWithoutNoise(String image, ColorProcessService colorProcessService);
+    int[][] getImageWithoutNoise(String image, int maxMatrix, ColorProcessService colorProcessService);
 
 }

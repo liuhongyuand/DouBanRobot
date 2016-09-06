@@ -14,7 +14,7 @@ public class LineNoiseScan extends AbstractNoiseProcess implements NoiseProcessS
     private static final Logger LOGGER = LoggerFactory.getLogger(LineNoiseScan.class);
 
     @Override
-    public int[][] getImageWithoutNoise(int[][] srcRGB, ColorProcessService colorProcessService) {
+    public int[][] getImageWithoutNoise(int[][] srcRGB, int maxMatrix, ColorProcessService colorProcessService) {
         NoiseProcessService noiseProcessService = new MatrixNoiseScan();
         int[][] newRGB = srcRGB;//colorProcessService.processColor(srcRGB);
         for (int i = 0; i < 3; i++) {
@@ -37,13 +37,13 @@ public class LineNoiseScan extends AbstractNoiseProcess implements NoiseProcessS
         newRGB = PicUtil.setColor(newRGB, newRGB.length - 3, newRGB[0].length, -1, false);
         newRGB = PicUtil.setColor(newRGB, newRGB.length - 2, newRGB[0].length, -1, false);
         newRGB = PicUtil.setColor(newRGB, newRGB.length - 1, newRGB[0].length, -1, false);
-        newRGB = noiseProcessService.getImageWithoutNoise(newRGB, colorProcessService);
+        newRGB = noiseProcessService.getImageWithoutNoise(newRGB, maxMatrix, colorProcessService);
         return newRGB;
     }
 
     @Override
-    public int[][] getImageWithoutNoise(String image, ColorProcessService colorProcessService) {
+    public int[][] getImageWithoutNoise(String image, int maxMatrix, ColorProcessService colorProcessService) {
         int[][] srcRGB = PicUtil.getRGBFromImageFile(image);
-        return this.getImageWithoutNoise(srcRGB, colorProcessService);
+        return this.getImageWithoutNoise(srcRGB, maxMatrix, colorProcessService);
     }
 }

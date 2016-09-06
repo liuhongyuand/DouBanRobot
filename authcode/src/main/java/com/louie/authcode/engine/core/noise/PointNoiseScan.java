@@ -22,7 +22,7 @@ public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcess
     private static final Logger LOGGER = LoggerFactory.getLogger(PointNoiseScan.class);
 
     @Override
-    public int[][] getImageWithoutNoise(int[][] srcRGB, ColorProcessService colorProcessService) {
+    public int[][] getImageWithoutNoise(int[][] srcRGB, int maxMatrix, ColorProcessService colorProcessService) {
         NoiseProcessService lineScanService = new LineNoiseScan();
         int[][] newRGB = srcRGB;
         if (colorProcessService != null) {
@@ -33,14 +33,15 @@ public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcess
 //            srcRGB = newRGB;
 //        }
         if (useLineScan) {
-            newRGB = lineScanService.getImageWithoutNoise(newRGB, colorProcessService);
+            newRGB = lineScanService.getImageWithoutNoise(newRGB, maxMatrix, colorProcessService);
         }
         return newRGB;
     }
 
-    public int[][] getImageWithoutNoise(String image, ColorProcessService colorProcessService){
+    @Override
+    public int[][] getImageWithoutNoise(String image, int maxMatrix, ColorProcessService colorProcessService){
         int[][] srcRGB = PicUtil.getRGBFromImageFile(image);
-        return this.getImageWithoutNoise(srcRGB, colorProcessService);
+        return this.getImageWithoutNoise(srcRGB, maxMatrix, colorProcessService);
     }
 
     private int[][] denoising(int[][] srcRGB, int[][] newRGB){

@@ -24,6 +24,7 @@ import java.util.Set;
 public class CodeImportImpl extends AbstractPicProcess implements AuthCodeProcess {
     public static boolean isDivide = true;
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeImportImpl.class);
+    private static final int MAX_MATRIX = 13;
 
     @Override
     public Object[] process(String image) {
@@ -32,7 +33,7 @@ public class CodeImportImpl extends AbstractPicProcess implements AuthCodeProces
         ColorProcessService colorProcessService = new BinaryValue();
         NoiseProcessService noiseProcessService = new PointNoiseScan();
         CharCutService charCutService = new DivideProcess();
-        int[][] newRGB = noiseProcessService.getImageWithoutNoise(image, colorProcessService);
+        int[][] newRGB = noiseProcessService.getImageWithoutNoise(image, MAX_MATRIX, colorProcessService);
         if (isDivide) {
             for (Letter letter : charCutService.divideToLetters(newRGB)){
                 BufferedImage bufferImg = new BufferedImage(letter.getLetterRGB().length, letter.getLetterRGB()[0].length, BufferedImage.TYPE_INT_BGR);

@@ -22,6 +22,7 @@ import java.util.Set;
  */
 public class CodeProcessImpl extends AbstractPicProcess implements AuthCodeProcess {
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeProcessImpl.class);
+    private static final int MAX_MATRIX = 13;
 
     @Override
     public Object[] process(String image) {
@@ -29,7 +30,7 @@ public class CodeProcessImpl extends AbstractPicProcess implements AuthCodeProce
         ColorProcessService colorProcessService = new BinaryValue();
         NoiseProcessService noiseProcessService = new PointNoiseScan();
         CharCutService charCutService = new LineScan();
-        int[][] newRGB = noiseProcessService.getImageWithoutNoise(image, colorProcessService);
+        int[][] newRGB = noiseProcessService.getImageWithoutNoise(image, MAX_MATRIX, colorProcessService);
         final Set<Letter> letterSet = charCutService.divideToLetters(newRGB);
         letterSet.forEach((letter -> {
             List<Point> points = new LinkedList<>();

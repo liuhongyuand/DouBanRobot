@@ -3,6 +3,7 @@ package com.louie.authcode.engine.core.noise;
 
 import com.louie.authcode.engine.core.color.ColorProcessService;
 import com.louie.authcode.engine.core.utils.PicUtil;
+import com.louie.authcode.exception.ParameterException;
 
 /**
  * Created by liuhongyu.louie on 2016/8/27.
@@ -13,8 +14,11 @@ public class MatrixNoiseScan extends AbstractNoiseProcess implements NoiseProces
     private int MatrixHeight = 4;
 
     @Override
-    public int[][] getImageWithoutNoise(int[][] srcRGB, ColorProcessService colorProcessService) {
-        while (MatrixWidth < 13) {
+    public int[][] getImageWithoutNoise(int[][] srcRGB, int maxMatrix, ColorProcessService colorProcessService) {
+        if (maxMatrix < 4){
+            throw new ParameterException("Matrix size should not less than 4.");
+        }
+        while (MatrixWidth < maxMatrix) {
             srcRGB = matrixScan(srcRGB);
             MatrixWidth++;
             MatrixHeight++;
@@ -28,8 +32,19 @@ public class MatrixNoiseScan extends AbstractNoiseProcess implements NoiseProces
     }
 
     @Override
-    public int[][] getImageWithoutNoise(String image, ColorProcessService colorProcessService) {
-        return this.getImageWithoutNoise(PicUtil.getRGBFromImageFile(image), colorProcessService);
+    public int[][] getImageWithoutNoise(String image, int maxMatrix, ColorProcessService colorProcessService) {
+        return this.getImageWithoutNoise(PicUtil.getRGBFromImageFile(image), maxMatrix, colorProcessService);
+    }
+
+    public int[][] getImageWithSpecifiedMatrixScan(int[][] srcRGB, int matrixWidth, int matrixHeight){
+        if (matrixWidth < 4 || matrixHeight < 4){
+            throw new ParameterException("Matrix size should not less than 4.");
+        }
+        MatrixWidth = matrixWidth;
+        MatrixHeight = matrixHeight;
+        srcRGB = matrixScan(srcRGB);
+        return srcRGB;
+
     }
 
     private int[][] matrixScan(int[][] srcRGB){

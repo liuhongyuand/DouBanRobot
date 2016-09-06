@@ -59,8 +59,8 @@ public class DivideProcess implements CharCutService {
     }
 
     private boolean isValidLetter(Letter letter){
-        if (letter.getLetterRGB().length > 13 && letter.getLetterRGB()[0].length > 13){
-            return true;
+        if (ScanUtil.isNeedRemoved(letter.getLetterRGB())){
+            return false;
         }
         return true;
     }

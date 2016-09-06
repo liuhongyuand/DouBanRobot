@@ -26,9 +26,7 @@ public class LeftScan {
         int[][] newRGB = letter.getOriginalPicRBG();
         int widthRight = endWidth + 1;
         if (widthRight < newRGB.length){
-            int blackPointCountRight = ScanUtil.blackPointCollector(newRGB, widthRight, true);
             if (!(widthRight > 11 && ScanUtil.isNeedDivide(newRGB, widthRight))){
-//            if (blackPointCountRight > 0){
                 newRGB = ScanUtil.setArrays(newRGB, 0, 0, widthRight, newRGB[0].length);
                 letter.setLetterRGB(newRGB);
                 return letterScan(letter, widthRight);
