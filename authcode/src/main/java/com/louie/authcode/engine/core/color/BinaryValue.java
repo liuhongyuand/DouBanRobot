@@ -1,7 +1,6 @@
 package com.louie.authcode.engine.core.color;
 
-import static com.louie.authcode.engine.EngineParameters.difRate;
-import static com.louie.authcode.engine.EngineParameters.target;
+import com.louie.authcode.engine.EngineConfiguration;
 
 /**
  * Created by liuhongyu.louie on 2016/8/23.
@@ -14,7 +13,7 @@ public class BinaryValue implements ColorProcessService {
         for (int i = 0; i < newRGB.length; i++) {
             for (int j = 0; j < newRGB[0].length; j++) {
                 int nowPoint = srcRGB[i][j] < 0 ? srcRGB[i][j] * -1 : srcRGB[i][j];
-                if (target - nowPoint < difRate || nowPoint - target > difRate ) {
+                if (EngineConfiguration.getService().getTargetColor() - nowPoint < EngineConfiguration.getService().getColorDifferentRate() || nowPoint - EngineConfiguration.getService().getTargetColor() > EngineConfiguration.getService().getColorDifferentRate() ) {
                     newRGB[i][j] = srcRGB[i][j];
                 }else {
                     newRGB[i][j] = -1;

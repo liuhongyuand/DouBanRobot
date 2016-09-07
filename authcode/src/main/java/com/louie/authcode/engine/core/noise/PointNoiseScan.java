@@ -1,5 +1,6 @@
 package com.louie.authcode.engine.core.noise;
 
+import com.louie.authcode.engine.EngineConfiguration;
 import com.louie.authcode.engine.core.color.ColorProcessService;
 import com.louie.authcode.engine.core.utils.PicUtil;
 import org.slf4j.Logger;
@@ -8,9 +9,6 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
-
-import static com.louie.authcode.engine.EngineParameters.difRate;
-import static com.louie.authcode.engine.EngineParameters.nearby;
 
 
 /**
@@ -28,10 +26,6 @@ public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcess
         if (colorProcessService != null) {
              newRGB = colorProcessService.processColor(srcRGB);
         }
-//        for (int i = 0; i < 2; i++) {
-//            newRGB = denoising(srcRGB, newRGB);
-//            srcRGB = newRGB;
-//        }
         if (useLineScan) {
             newRGB = lineScanService.getImageWithoutNoise(newRGB, maxMatrix, colorProcessService);
         }
@@ -52,8 +46,8 @@ public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcess
     public static int[][] doDenoising(int[][] srcRGB, int[][] newRGB, int width, int height){
         for (int i = 0; i < width; i++){
             for (int j = 0; j < height; j++){
-                for (int position = 1; position <= nearby; position++) {
-                    if (differRate(srcRGB, i, j, width, height, nearby)) {
+                for (int position = 1; position <= EngineConfiguration.getService().getNearby(); position++) {
+                    if (differRate(srcRGB, i, j, width, height, EngineConfiguration.getService().getNearby())) {
                         newRGB[i][j] = -1;
                     }
                 }
@@ -101,7 +95,7 @@ public class PointNoiseScan extends AbstractNoiseProcess implements NoiseProcess
             }
         }
         RGBCircle.forEach((k, v) -> v.forEach((value) -> {
-            if (value < 0 ? value * -1 > difRate : value > difRate || value < 0 ? value * -1 > difRate : value > difRate){
+            if (value < 0 ? value * -1 > EngineConfiguration.getService().getColorDifferentRate() : value > EngineConfiguration.getService().getColorDifferentRate() || value < 0 ? value * -1 > EngineConfiguration.getService().getColorDifferentRate() : value > EngineConfiguration.getService().getColorDifferentRate()){
                 isDiff[0] = isDiff[0] + 1;
             }
         }));

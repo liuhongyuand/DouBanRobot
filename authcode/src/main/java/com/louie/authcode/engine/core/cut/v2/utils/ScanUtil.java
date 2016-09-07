@@ -234,17 +234,6 @@ public class ScanUtil {
                 isNextLineHasNearBlackPoint[10] = true;
             }
         });
-//        *  0:is right line has near black point.
-//        *  1:is right line has other near black point.
-//        *  2:is left line has near black point.
-//        *  3:is left line has other near black point.
-//        *  4:is right line has continuously black point.
-//        *  5:is left line has continuously black point.
-//        *  6:is this line has continuously black point.
-//        *  7:is right line has other black point near this line continuously black point.
-//        *  8:is left line has other black point near this line continuously black point.
-//        *  9:is right line has continuously black point near this line other black point.
-//        * 10:is left line has continuously black point near this line other black point.
         if (isNextLineHasNearBlackPoint[5] && isNextLineHasNearBlackPoint[9]){
             return false;
         }

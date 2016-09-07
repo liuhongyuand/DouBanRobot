@@ -1,4 +1,4 @@
-package com.louie.authcode.engine;
+package com.louie.authcode.engine.config;
 
 import com.louie.douban.util.ImportFileUtils;
 

@@ -1,12 +1,15 @@
 package com.louie.authcode;
 
 import com.louie.authcode.engine.AuthCodeProcess;
+import com.louie.authcode.engine.EngineConfiguration;
 import com.louie.authcode.engine.core.AbstractPicProcess;
 import com.louie.authcode.engine.core.CodeImportImpl;
 import com.louie.authcode.engine.core.CodeProcessImpl;
 import com.louie.authcode.engine.core.cut.v2.DivideProcess;
 import com.louie.authcode.engine.core.utils.PicUtil;
 import com.louie.authcode.engine.brain.PointMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,13 +17,14 @@ import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Set;
 
-import static com.louie.authcode.engine.EngineParameters.*;
+import static com.louie.authcode.engine.config.EngineParameters.*;
 
 /**
  * Created by liuhongyu.louie on 2016/8/21.
  */
 public class CodeIdentify {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CodeIdentify.class);
     private static String[] strings;
 
     private void outputRGB(String FILE){
@@ -81,19 +85,17 @@ public class CodeIdentify {
         System.out.println("Map size: " + PointMap.mapSize());
     }
 
-    public void getCode(final String FILE){
+    public String getCode(final String FILE){
         AuthCodeProcess process = new CodeProcessImpl();
         Object[] results = process.process(FILE);
         List<?> letters = (List<?>) results[0];
-        for (Object letterObj : letters) {
-            List<Point> letterList = (List<Point>) letterObj;
-            System.out.print(PointMap.getLetter(letterList, deviation, similarity));
-        }
-        System.out.println();
+        String authCode = PointMap.getAuthCode(letters);
+        LOGGER.info("Authcode: " + authCode);
+        return authCode;
     }
 
     public static void main(String[] args){
-        strings = new String[]{"", "", "t", "e", "", "", "", "", "", "", "", "", "", ""};
+        strings = new String[]{"s", "h", "a", "k", "e", "", "", "", "", "", "", "", "", ""};
         final String FILE = PROJECT_ROOT + "/training/0fa82c65-1040-417c-a377-f23a95b21e62.jpg";
         final String resources = PROJECT_ROOT + "/resources/captcha.jpg";
 //        new CodeIdentify().outputRGB(resources);

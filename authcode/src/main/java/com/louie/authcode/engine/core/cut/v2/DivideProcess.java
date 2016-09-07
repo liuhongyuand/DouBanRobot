@@ -4,7 +4,6 @@ import com.louie.authcode.engine.core.cut.CharCutService;
 import com.louie.authcode.engine.core.cut.v2.utils.ScanUtil;
 import com.louie.authcode.engine.model.Letter;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

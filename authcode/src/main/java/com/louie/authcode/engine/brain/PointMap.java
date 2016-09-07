@@ -1,10 +1,13 @@
 package com.louie.authcode.engine.brain;
 
-import com.louie.authcode.engine.brain.util.FileUtils;
+import com.louie.authcode.engine.EngineConfiguration;
+import com.louie.authcode.engine.brain.Identify.IdentificationService;
+import com.louie.authcode.engine.brain.utils.FileUtils;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -23,7 +26,6 @@ public class PointMap extends HashMap<String, HashSet<java.util.List<Point>>> im
     }
 
     private PointMap(){
-
     }
 
     public static int mapSize(){
@@ -44,50 +46,11 @@ public class PointMap extends HashMap<String, HashSet<java.util.List<Point>>> im
         }
     }
 
-    public static String getLetter(List<Point> pointKeyList, double deviation, double similarity) {
-        final String[] letter = {""};
-        for (Map.Entry<String, HashSet<List<Point>>> entry : POINT_MAP.entrySet()){
-            for (List<Point> PointList : entry.getValue()){
-                int[] findNum = {0};
-                pointKeyList.forEach((KeyPoint -> {
-                    int[] findNumInList = {0};
-                    PointList.forEach(ValuePoint -> {
-                        if (findNumInList[0] == 0 && isInner(ValuePoint, KeyPoint, deviation)){
-                            findNumInList[0]++;
-                        }
-                    });
-                    findNum[0] += findNumInList[0];
-                }));
-                if ((double) findNum[0] / (double)pointKeyList.size() > similarity){
-                    int[] findNumReverse = {0};
-                    PointList.forEach((ValuePoint -> {
-                        int[] findNumListReverse = {0};
-                        pointKeyList.forEach(KeyPoint -> {
-                            if (findNumListReverse[0] == 0 && isInner(ValuePoint, KeyPoint, deviation)){
-                                findNumListReverse[0]++;
-                            }
-                        });
-                        findNumReverse[0] += findNumListReverse[0];
-                    }));
-                    if ((double) findNumReverse[0] / (double)PointList.size() > similarity) {
-                        if ((PointList.size() > pointKeyList.size() ? (double)pointKeyList.size() / (double)PointList.size() : (double)PointList.size() / (double)pointKeyList.size()) > similarity) {
-                            letter[0] = entry.getKey();
-                            break;
-                        }
-                    }
-                }
-            }
-            if (!letter[0].isEmpty()){
-                break;
-            }
-        }
-        return letter[0];
-    }
-
-    private static boolean isInner(Point pointValue, Point pointKey, double deviation){
-        int differenceX = Math.abs(pointKey.x - pointValue.x);
-        int differenceY = Math.abs(pointKey.y - pointValue.y);
-        return differenceX < deviation && differenceY < deviation;
+    public static String getAuthCode(List<?> letterSet){
+        IdentificationService identificationService = EngineConfiguration.getService().getIdentificationService();
+        final StringBuilder AUTHCODE= new StringBuilder("");
+        letterSet.forEach((letter -> AUTHCODE.append(identificationService.identifyLetter((List<Point>) letter, POINT_MAP))));
+        return AUTHCODE.toString();
     }
 
 }

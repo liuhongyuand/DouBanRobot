@@ -3,7 +3,7 @@ package com.louie.authcode.engine.model;
 
 import com.louie.douban.model.BoundaryLine;
 
-import static com.louie.authcode.engine.EngineParameters.LETTER_WIDTH;
+import static com.louie.authcode.engine.config.EngineParameters.LETTER_WIDTH;
 
 /**
  * Auth letter
@@ -104,11 +104,11 @@ public class Letter {
     }
 
     public int getWidth() {
-        return getEndX() - getStartX();
+        return letterRGB.length;
     }
 
     public int getHeight() {
-        return getEndY() - getStartY();
+        return letterRGB[0].length;
     }
 
     public void updateLetterRGB(){

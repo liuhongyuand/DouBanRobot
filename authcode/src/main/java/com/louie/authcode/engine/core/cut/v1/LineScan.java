@@ -8,7 +8,7 @@ import com.louie.authcode.engine.core.utils.Type;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static com.louie.authcode.engine.EngineParameters.*;
+import static com.louie.authcode.engine.config.EngineParameters.*;
 
 
 /**

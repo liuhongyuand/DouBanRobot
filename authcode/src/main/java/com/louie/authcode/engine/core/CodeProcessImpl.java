@@ -1,12 +1,10 @@
 package com.louie.authcode.engine.core;
 
 import com.louie.authcode.engine.AuthCodeProcess;
-import com.louie.authcode.engine.core.color.BinaryValue;
+import com.louie.authcode.engine.EngineConfiguration;
 import com.louie.authcode.engine.core.color.ColorProcessService;
 import com.louie.authcode.engine.core.cut.CharCutService;
-import com.louie.authcode.engine.core.cut.v1.LineScan;
 import com.louie.authcode.engine.core.noise.NoiseProcessService;
-import com.louie.authcode.engine.core.noise.PointNoiseScan;
 import com.louie.authcode.engine.model.Letter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,14 +20,14 @@ import java.util.Set;
  */
 public class CodeProcessImpl extends AbstractPicProcess implements AuthCodeProcess {
     private static final Logger LOGGER = LoggerFactory.getLogger(CodeProcessImpl.class);
-    private static final int MAX_MATRIX = 13;
+    private static final int MAX_MATRIX = EngineConfiguration.getService().getMaxMatrix();
 
     @Override
     public Object[] process(String image) {
         final List<List<Point>> letterPointList = new LinkedList<>();
-        ColorProcessService colorProcessService = new BinaryValue();
-        NoiseProcessService noiseProcessService = new PointNoiseScan();
-        CharCutService charCutService = new LineScan();
+        ColorProcessService colorProcessService = EngineConfiguration.getService().getColorProcessService();
+        NoiseProcessService noiseProcessService = EngineConfiguration.getService().getNoiseProcessService();
+        CharCutService charCutService = EngineConfiguration.getService().getCharCutService();
         int[][] newRGB = noiseProcessService.getImageWithoutNoise(image, MAX_MATRIX, colorProcessService);
         final Set<Letter> letterSet = charCutService.divideToLetters(newRGB);
         letterSet.forEach((letter -> {

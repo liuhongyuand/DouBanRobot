@@ -1,6 +1,6 @@
-package com.louie.authcode.engine.brain.util;
+package com.louie.authcode.engine.brain.utils;
 
-import com.louie.authcode.engine.EngineParameters;
+import com.louie.authcode.engine.config.EngineParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
