@@ -23,8 +23,6 @@ public class FileUtils {
             objectOutputStreamBack.writeObject(object);
         }catch(Exception e){
             LOGGER.error(e.getMessage(), e);
-        }finally {
-            LOGGER.info(object.equals("") ? "Clean the file" : "Try to write object to file.");
         }
     }
 
@@ -39,9 +37,6 @@ public class FileUtils {
             LOGGER.error(e.getMessage(), e);
         } catch (ClassNotFoundException ce){
             LOGGER.info("Try to get object from file, but failed");
-        }
-        finally {
-            LOGGER.info("Try to get object from file.");
         }
         return object;
     }

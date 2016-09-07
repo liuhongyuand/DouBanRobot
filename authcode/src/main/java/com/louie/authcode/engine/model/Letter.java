@@ -1,8 +1,6 @@
 package com.louie.authcode.engine.model;
 
 
-import com.louie.douban.model.BoundaryLine;
-
 import static com.louie.authcode.engine.config.EngineParameters.LETTER_WIDTH;
 
 /**

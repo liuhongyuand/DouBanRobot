@@ -1,4 +1,4 @@
-package com.louie.douban.model;
+package com.louie.authcode.engine.model;
 
 /**
  * The boundary line

@@ -1,8 +1,7 @@
 package com.louie.authcode;
 
-import com.louie.douban.util.GlobalCollections;
-import com.louie.douban.util.ImportFileUtils;
-import com.louie.douban.util.Parameters;
+import com.louie.authcode.engine.config.EngineParameters;
+import com.louie.authcode.utils.ImportFileUtils;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,7 +23,7 @@ public class AuthCodeGet {
 
     private static void refreshWeb(String url) throws IOException {
         final Connection connection = Jsoup.connect(url);
-        GlobalCollections.HEAD.forEach(connection::header);
+//        GlobalCollections.HEAD.forEach(connection::header);
         connection.validateTLSCertificates(false);
         Document document = connection.timeout(10 * 1000).get();
         Element element = document.getElementById("captcha_image");
@@ -35,7 +34,7 @@ public class AuthCodeGet {
     private static void downloadSrc(String url) throws IOException {
         URL srcURI = new URL(url);
         InputStream inputStream = srcURI.openStream();
-        OutputStream out = new BufferedOutputStream(new FileOutputStream(Parameters.PATH + "/training/" + UUID.randomUUID() + ".jpg"));
+        OutputStream out = new BufferedOutputStream(new FileOutputStream(EngineParameters.PROJECT_ROOT + "/training/" + UUID.randomUUID() + ".jpg"));
         byte[] bytes = new byte[1024];
         for (int temp; (temp = inputStream.read(bytes, 0, bytes.length)) != -1;) {
             out.write(bytes, 0, temp);

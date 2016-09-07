@@ -1,6 +1,7 @@
 package com.louie.authcode.engine.config;
 
-import com.louie.douban.util.ImportFileUtils;
+import com.louie.authcode.utils.ImportFileUtils;
+
 
 /**
  * Created by liuhongyu.louie on 2016/9/3.

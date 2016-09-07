@@ -156,7 +156,7 @@ public class ScanUtil {
     }
 
     /**
-     * isNextLineHasNearBlackPoint[] :
+     *  isNextLineHasNearBlackPoint[] :
      *  0:is right line has near black point.
      *  1:is right line has other near black point.
      *  2:is left line has near black point.
@@ -203,7 +203,7 @@ public class ScanUtil {
         if (otherBlackPointHeightLeft.size() == 0){
             isNextLineHasNearBlackPoint[5] = true;
         }
-        if (otherBlackPointHeightLeft.size() == 0){
+        if (otherBlackPointHeightRight.size() == 0){
             isNextLineHasNearBlackPoint[4] = true;
         }
         continuouslyBlackPointHeight.forEach((point) -> {
@@ -234,6 +234,18 @@ public class ScanUtil {
                 isNextLineHasNearBlackPoint[10] = true;
             }
         });
+        if (continuouslyBlackPointHeightRight.size() < 2 && isNextLineHasNearBlackPoint[5] && !isNextLineHasNearBlackPoint[6] && !isNextLineHasNearBlackPoint[10]){
+            return true;
+        }
+        if (isNextLineHasNearBlackPoint[4] && isNextLineHasNearBlackPoint[5] && !isNextLineHasNearBlackPoint[6] && isNextLineHasNearBlackPoint[1]){
+            return true;
+        }
+        if (isNextLineHasNearBlackPoint[2] && isNextLineHasNearBlackPoint[3] && isNextLineHasNearBlackPoint[4]){
+            return false;
+        }
+        if (isNextLineHasNearBlackPoint[1] && isNextLineHasNearBlackPoint[2] && isNextLineHasNearBlackPoint[3]){
+            return false;
+        }
         if (isNextLineHasNearBlackPoint[5] && isNextLineHasNearBlackPoint[9]){
             return false;
         }
@@ -302,7 +314,7 @@ public class ScanUtil {
 
     public static boolean isNeedRemoved(int[][] srcRGB){
         double whitePointCount = 0.0;
-        if (srcRGB.length < 9 || srcRGB[0].length< 13){
+        if (srcRGB.length < 10 || srcRGB[0].length < 15){
             return true;
         }
         for (int[] aSrcRGB : srcRGB) {
@@ -312,7 +324,7 @@ public class ScanUtil {
                 }
             }
         }
-        if (whitePointCount / (double) (srcRGB.length * srcRGB[0].length) < 0.459999){
+        if (whitePointCount / (double) (srcRGB.length * srcRGB[0].length) < 0.399999){
             return true;
         }
         return false;

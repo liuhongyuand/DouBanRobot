@@ -95,13 +95,14 @@ public class CodeIdentify {
     }
 
     public static void main(String[] args){
-        strings = new String[]{"s", "h", "a", "k", "e", "", "", "", "", "", "", "", "", ""};
-        final String FILE = PROJECT_ROOT + "/training/0fa82c65-1040-417c-a377-f23a95b21e62.jpg";
+        strings = new String[]{"p", "a", "p", "e", "r", "", "", "", "", "", "", "", "", ""};
+        final String Learning = PROJECT_ROOT + "/learning/2fc9f004-6be8-4668-84a7-227a215e26eb.jpg";
+        final String FILE = PROJECT_ROOT + "/training/43f35d9a-fc84-4f18-b192-7a1d4895dc33.jpg";
         final String resources = PROJECT_ROOT + "/resources/captcha.jpg";
 //        new CodeIdentify().outputRGB(resources);
 //        new CodeIdentify().codeView(resources);
-        new CodeIdentify().trainingPicIdentify(resources, false);
-//        new CodeIdentify().getCode(resources);
+        new CodeIdentify().trainingPicIdentify(Learning, false);
+        new CodeIdentify().getCode(Learning);
     }
 
 }
