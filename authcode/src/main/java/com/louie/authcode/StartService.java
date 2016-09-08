@@ -10,7 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class StartService {
 
     public static void main(String[] args){
-        SpringApplication.run(StartService.class, args);
+        Object[] objects = new Object[]{StartService.class};
+        SpringApplication.run(objects, args);
     }
 
 }
