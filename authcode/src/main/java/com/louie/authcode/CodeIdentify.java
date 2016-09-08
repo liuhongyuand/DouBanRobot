@@ -96,13 +96,13 @@ public class CodeIdentify {
 
     public static void main(String[] args){
         strings = new String[]{"p", "a", "p", "e", "r", "", "", "", "", "", "", "", "", ""};
-        final String Learning = PROJECT_ROOT + "/learning/among.jpg";
-//        final String FILE = PROJECT_ROOT + "/training/0bacc360-945f-4d67-b126-1d5504dee16a.jpg";
-//        final String resources = PROJECT_ROOT + "/resources/captcha5.jpg";
+//        final String Learning = PROJECT_ROOT + "/learning/among.jpg";
+        final String FILE = PROJECT_ROOT + "/training/0bacc360-945f-4d67-b126-1d5504dee16a.jpg";
+        final String resources = PROJECT_ROOT + "/resources/captcha_s.jpg";
 //        new CodeIdentify().outputRGB(resources);
 //        new CodeIdentify().codeView(resources);
-        new CodeIdentify().trainingPicIdentify(Learning, false);
-        new CodeIdentify().getCode(Learning);
+        new CodeIdentify().trainingPicIdentify(resources, false);
+        new CodeIdentify().getCode(resources);
     }
 
 }
