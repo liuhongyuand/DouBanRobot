@@ -314,7 +314,7 @@ public class ScanUtil {
 
     public static boolean isNeedRemoved(int[][] srcRGB){
         double whitePointCount = 0.0;
-        if (srcRGB.length < 10 || srcRGB[0].length < 15){
+        if (srcRGB.length < 5 || srcRGB[0].length < 15){
             return true;
         }
         for (int[] aSrcRGB : srcRGB) {
@@ -324,7 +324,7 @@ public class ScanUtil {
                 }
             }
         }
-        if (whitePointCount / (double) (srcRGB.length * srcRGB[0].length) < 0.399999){
+        if (whitePointCount / (double) (srcRGB.length * srcRGB[0].length) < 0.329999){
             return true;
         }
         return false;
