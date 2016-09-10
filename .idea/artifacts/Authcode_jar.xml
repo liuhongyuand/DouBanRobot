@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Authcode_jar</output-path>
     <root id="archive" name="DouBanRobot.jar">
       <element id="module-output" name="DouBanRobot" />
-      <element id="module-output" name="authcode" />
+      <element id="module-output" name="AuthCode" />
       <element id="module-output" name="douban" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/slf4j/slf4j-simple/1.7.21/slf4j-simple-1.7.21.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/springframework/spring-beans/4.3.2.RELEASE/spring-beans-4.3.2.RELEASE.jar" path-in-jar="/" />

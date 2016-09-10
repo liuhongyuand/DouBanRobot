@@ -23,7 +23,6 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="authcode" />
-        <module name="AuthCode" />
         <module name="douban" />
       </profile>
     </annotationProcessing>

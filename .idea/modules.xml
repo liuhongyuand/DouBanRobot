@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DouBanRobot.iml" filepath="$PROJECT_DIR$/DouBanRobot.iml" />
-      <module fileurl="file://$PROJECT_DIR$/authcode/authcode.iml" filepath="$PROJECT_DIR$/authcode/authcode.iml" />
       <module fileurl="file://$PROJECT_DIR$/douban/douban.iml" filepath="$PROJECT_DIR$/douban/douban.iml" />
     </modules>
   </component>
