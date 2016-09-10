@@ -18,6 +18,12 @@ public interface ConfigurationService {
 
     IdentificationService getIdentificationService();
 
+    boolean getEnabledImportData();
+
+    String getIgnoredString();
+
+    String getReplaceToNullString();
+
     int getMaxMatrix();
 
     double getSimilarity();

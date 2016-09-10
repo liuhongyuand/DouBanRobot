@@ -19,6 +19,9 @@ public class Configuration implements ConfigurationService {
     private NoiseProcessService noiseProcessService = new PointNoiseScan();
     private CharCutService charCutService = new DivideProcess();
     private IdentificationService identificationService = new IdentificationServiceKNNImpl();
+    private final String IGNORED_LETTER_REGEX = "\\.";
+    private final String REPLACE_TO_NULL_REGEX = "\\d";
+    private boolean enabledImportData = true;
 
     public void setColorProcessService(ColorProcessService colorProcessService) {
         this.colorProcessService = colorProcessService;
@@ -54,6 +57,21 @@ public class Configuration implements ConfigurationService {
     @Override
     public IdentificationService getIdentificationService() {
         return identificationService;
+    }
+
+    @Override
+    public boolean getEnabledImportData() {
+        return enabledImportData;
+    }
+
+    @Override
+    public String getIgnoredString() {
+        return IGNORED_LETTER_REGEX;
+    }
+
+    @Override
+    public String getReplaceToNullString() {
+        return REPLACE_TO_NULL_REGEX;
     }
 
     @Override

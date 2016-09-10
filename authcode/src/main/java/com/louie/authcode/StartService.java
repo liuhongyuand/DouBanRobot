@@ -9,6 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class StartService {
 
+    public static Boolean SystemIsOnline = true;
+
     public static void main(String[] args){
         Object[] objects = new Object[]{StartService.class};
         SpringApplication.run(objects, args);

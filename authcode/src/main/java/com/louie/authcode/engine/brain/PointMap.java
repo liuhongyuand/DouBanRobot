@@ -28,6 +28,11 @@ public class PointMap extends HashMap<String, HashSet<java.util.List<Point>>> im
     private PointMap(){
     }
 
+    public static void clearData(){
+        POINT_MAP.clear();
+        FileUtils.ObjectToFile(POINT_MAP);
+    }
+
     public static int mapSize(){
         return POINT_MAP.size();
     }

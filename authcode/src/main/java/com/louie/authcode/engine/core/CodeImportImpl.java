@@ -26,6 +26,9 @@ public class CodeImportImpl extends AbstractPicProcess implements AuthCodeProces
 
     @Override
     public Object[] process(String image) {
+        if (!isCorrectImageFormat(image)){
+            return null;
+        }
         final Set<BufferedImage> bufferedImages = new LinkedHashSet<>();
         final List<List<Point>> letterPointList = new LinkedList<>();
         ColorProcessService colorProcessService = EngineConfiguration.getService().getColorProcessService();

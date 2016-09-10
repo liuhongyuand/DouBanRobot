@@ -1,4 +1,4 @@
-package com.louie.authcode;
+package com.louie.authcode.engine.core.utils;
 
 import com.louie.authcode.engine.config.EngineParameters;
 import com.louie.authcode.utils.ImportFileUtils;

@@ -38,20 +38,20 @@ public class ScanUtilTest {
             -1,
             -1
     }};
-
-    @Test
-    public void testContinuouslyBlackPoint(){
-        Assert.assertEquals(true, ScanUtil.isContinuouslyBlackPoint(TEST_IMAGE, 0));
-    }
-
-    @Test
-    public void testDiscontinuouslyBlackPoint(){
-        Assert.assertEquals(false, ScanUtil.isContinuouslyBlackPoint(TEST_IMAGE, 1));
-    }
-
-    @Test
-    public void testContinuouslyWhitePoint(){
-        Assert.assertEquals(false, ScanUtil.isContinuouslyBlackPoint(TEST_IMAGE, 2));
-    }
+//
+//    @Test
+//    public void testContinuouslyBlackPoint(){
+//        Assert.assertEquals(true, ScanUtil.isContinuouslyBlackPoint(TEST_IMAGE, 0));
+//    }
+//
+//    @Test
+//    public void testDiscontinuouslyBlackPoint(){
+//        Assert.assertEquals(false, ScanUtil.isContinuouslyBlackPoint(TEST_IMAGE, 1));
+//    }
+//
+//    @Test
+//    public void testContinuouslyWhitePoint(){
+//        Assert.assertEquals(false, ScanUtil.isContinuouslyBlackPoint(TEST_IMAGE, 2));
+//    }
 
 }

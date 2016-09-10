@@ -24,6 +24,9 @@ public class CodeProcessImpl extends AbstractPicProcess implements AuthCodeProce
 
     @Override
     public Object[] process(String image) {
+        if (!isCorrectImageFormat(image)){
+            return null;
+        }
         final List<List<Point>> letterPointList = new LinkedList<>();
         ColorProcessService colorProcessService = EngineConfiguration.getService().getColorProcessService();
         NoiseProcessService noiseProcessService = EngineConfiguration.getService().getNoiseProcessService();
